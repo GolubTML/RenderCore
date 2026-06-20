@@ -1,5 +1,4 @@
-#include <RenderCore.hpp>
-// #include <glm/glm.hpp>
+#include <RenderCore/RenderCore.hpp>
 
 int main()
 {
@@ -16,6 +15,8 @@ int main()
     rc::Camera camera(glm::vec3(0.f), 45.f, description.width, description.height);
     rc::SetCamera(camera);
 
+    auto rectangle = rc::CreateRectangle(1.f, 1.f, { 255, 255, 255 });
+
     while (!window.ShouldClose())
     {
         window.PollEvents();
@@ -24,10 +25,12 @@ int main()
 
         rc::BeginFrame();
             // some cool code here
-            rc::DrawRectangle();
+            rc::DrawMesh(rectangle);
 
         rc::EndFrame();
     }
+
+    rc::DestroyMesh(rectangle);
     
     rc::Terminate();
 }

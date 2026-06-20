@@ -2,6 +2,9 @@
 
 #include "engine/window.hpp"
 #include "engine/camera.hpp"
+#include "engine/mesh.hpp"
+
+#include "RenderCore/rcTypes.hpp"
 
 namespace rc
 {
@@ -16,5 +19,8 @@ namespace rc
     void BeginFrame();
     void EndFrame();
 
-    void DrawRectangle();
+    void DrawMesh(Mesh& mesh);
+    void DestroyMesh(Mesh& mesh);
+
+    Mesh CreateRectangle(float w, float h, const Color& color);
 }

@@ -6,22 +6,31 @@
 
 class VulkanCommandBuffer;
 
-class Mesh
+namespace rc
 {
-public:
-    Mesh();
-    ~Mesh();
+    class Mesh
+    {
+    public:
+        Mesh() = default;
+        ~Mesh();
 
-    void create(const VulkanDevice& vDevice, 
-        const std::vector<Vertex>& verticies, const std::vector<uint32_t>& indices);
+        Mesh(const Mesh&) = delete;
+        Mesh& operator=(const Mesh&) = delete;
+        
+        Mesh(Mesh&& other) noexcept;
+        Mesh& operator=(Mesh&& other) noexcept;
     
-    void cleanup(VkDevice device);
-
-    void draw(const VulkanCommandBuffer& cmd, uint32_t currentFrame);
-
-private:
-    VulkanBuffer vertexBuffer;
-    VulkanBuffer indexBuffer;
-
-    uint32_t indexCount;
-};
+        void create(const VulkanDevice& vDevice, 
+            const std::vector<Vertex>& verticies, const std::vector<uint32_t>& indices);
+        
+        void cleanup(VkDevice device);
+        
+        void draw(const VulkanCommandBuffer& cmd, uint32_t currentFrame);
+        
+    private:
+        VulkanBuffer vertexBuffer;
+        VulkanBuffer indexBuffer;
+        
+        uint32_t indexCount;
+    };
+}

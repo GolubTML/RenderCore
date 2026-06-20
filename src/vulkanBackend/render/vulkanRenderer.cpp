@@ -155,7 +155,7 @@ void VulkanRenderer::endFrame()
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-void VulkanRenderer::drawMesh(Mesh& mesh)
+void VulkanRenderer::drawMesh(rc::Mesh& mesh)
 {
     vkCmdBindPipeline(cmd->getCommandBuffers()[currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getGraphicsPipeline());
 

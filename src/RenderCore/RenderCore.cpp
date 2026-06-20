@@ -1,4 +1,4 @@
-#include "RenderCore.hpp"
+#include "RenderCore/RenderCore.hpp"
 #include <GLFW/glfw3.h>
 
 #include "vulkanBackend/vulkanContext.hpp"
@@ -11,7 +11,7 @@
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/render/vulkanRenderer.hpp"  
 
-#include "engine/mesh.hpp"
+#include "RenderCore/rcGeometry.hpp"
 
 namespace rc
 {
@@ -23,19 +23,6 @@ namespace rc
     FramebufferManager framebuffers;
     VulkanCommandBuffer commandBuffer;
     VulkanRenderer renderer;
-
-    const std::vector<Vertex> vertices = {
-        {{-0.5f, -0.5f, 0.f}, {1.0f, 0.0f, 0.0f}},
-        {{0.5f, -0.5f, 0.f}, {0.0f, 1.0f, 0.0f}},
-        {{0.5f, 0.5f, 0.f}, {0.0f, 0.0f, 1.0f}},
-        {{-0.5f, 0.5f, 0.f}, {1.0f, 1.0f, 1.0f}}
-    };
-
-    const std::vector<uint32_t> indices = {
-        0, 1, 2, 2, 3, 0
-    };
-
-    Mesh rectangle;
 
     void Init()
     {
@@ -53,8 +40,6 @@ namespace rc
         framebuffers.init(device, swapchain, renderPass.getRenderPass());
         commandBuffer.init(device);
         renderer.init(device, swapchain, framebuffers, renderPass, pipeline, commandBuffer);
-
-        rectangle.create(device, vertices, indices);
     }
 
     void SetCamera(rc::Camera& camera)
@@ -64,8 +49,6 @@ namespace rc
 
     void Terminate()
     {
-        rectangle.cleanup(device.getDevice());
-
         renderer.cleanup(device.getDevice());
         commandBuffer.cleanup(device.getDevice());
         framebuffers.cleanup(device.getDevice());
@@ -95,8 +78,23 @@ namespace rc
         renderer.endFrame();
     }
 
-    void DrawRectangle()
+    void DrawMesh(Mesh& mesh)
     {
-        renderer.drawMesh(rectangle);
+        renderer.drawMesh(mesh);
+    }
+
+    void DestroyMesh(Mesh& mesh)
+    {
+        mesh.cleanup(device.getDevice());
+    }
+
+    Mesh CreateRectangle(float w, float h, const Color& color)
+    {
+        auto data = Geometry::CreateRectangleData(w, h, color);
+
+        Mesh mesh;
+        mesh.create(device, data.first, data.second);
+
+        return mesh;
     }
 }
