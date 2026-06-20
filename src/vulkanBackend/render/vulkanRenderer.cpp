@@ -54,6 +54,12 @@ void VulkanRenderer::cleanup(VkDevice device)
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 }
 
+void VulkanRenderer::setClearValues(float r, float g, float b)
+{
+    clearValues[0].color = {r, g, b, 1.f};
+    clearValues[1].depthStencil = {1.f, 0};
+}
+
 uint32_t VulkanRenderer::beginFrame()
 {
     vkWaitForFences(vDevice->getDevice(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
@@ -71,11 +77,6 @@ uint32_t VulkanRenderer::beginFrame()
     beginInfo.framebuffer = framebuffers->getFramebuffers()[currentImageIndex];
     beginInfo.renderArea.offset = {0,0};
     beginInfo.renderArea.extent = swapchain->getSwapchainExtent();
-
-    // In future, make that user can type own color to clear value
-    std::array<VkClearValue, 2> clearValues{};
-    clearValues[0].color = {0.1f, 0.1f, 0.1f, 1.f};
-    clearValues[1].depthStencil = {1.f, 0};
 
     beginInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
     beginInfo.pClearValues = clearValues.data();

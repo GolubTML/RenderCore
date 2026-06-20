@@ -46,6 +46,11 @@ namespace rc
         glfwTerminate();
     }
 
+    void ClearColor(float r, float g, float b)
+    {
+        renderer.setClearValues(r, g, b);
+    }
+
     void BeginFrame()
     {
         renderer.beginFrame();

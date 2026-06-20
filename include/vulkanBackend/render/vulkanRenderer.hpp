@@ -21,6 +21,8 @@ public:
 
     void cleanup(VkDevice device);
 
+    void setClearValues(float r, float g, float b);
+
     uint32_t beginFrame();
     void endFrame();
 
@@ -31,6 +33,8 @@ private:
     VulkanRenderPass* renderPass = nullptr;
     VulkanPipeline* pipeline = nullptr;
     VulkanCommandBuffer* cmd = nullptr;
+
+    std::array<VkClearValue, 2> clearValues{};
 
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;

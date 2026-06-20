@@ -18,6 +18,8 @@ int main()
     {
         window.PollEvents();
 
+        rc::ClearColor(0.1f, 0.1f, 0.1f);
+
         rc::BeginFrame();
             // some cool code here
         rc::EndFrame();

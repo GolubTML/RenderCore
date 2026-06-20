@@ -19,6 +19,7 @@ namespace rc
 
     void Terminate();
 
+    void ClearColor(float r, float g, float b);
     void BeginFrame();
     void EndFrame();
 }
