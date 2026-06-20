@@ -1,5 +1,5 @@
 #include <RenderCore.hpp>
-#include <iostream>
+// #include <glm/glm.hpp>
 
 int main()
 {
@@ -11,8 +11,10 @@ int main()
     description.title = "Test";
 
     rc::Window window(description);
-
     rc::InitVulkan(window);
+
+    rc::Camera camera(glm::vec3(0.f), 45.f, description.width, description.height);
+    rc::SetCamera(camera);
 
     while (!window.ShouldClose())
     {

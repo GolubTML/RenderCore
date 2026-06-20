@@ -9,6 +9,11 @@ class VulkanPipeline;
 class VulkanCommandBuffer;
 class VulkanRenderPass;
 
+namespace rc
+{
+    class Camera;
+}
+
 class VulkanRenderer
 {
 public:
@@ -21,6 +26,7 @@ public:
 
     void cleanup(VkDevice device);
 
+    void setCamera(rc::Camera& c);
     void setClearValues(float r, float g, float b);
 
     uint32_t beginFrame();
@@ -52,6 +58,7 @@ private:
     uint32_t currentImageIndex = 0;
 
     VulkanBuffer vertexBuffer;
+    rc::Camera* cameraPtr = nullptr;
 
     void createDescriptorPool();
     void createDescriptorSet();

@@ -7,8 +7,7 @@
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/types.hpp"
 #include "engine/vertex.hpp"
-
-#include <glm/gtc/matrix_transform.hpp>
+#include "engine/camera.hpp"
 
 std::vector<Vertex> vertices = {
     {{0.0f, -0.5f, 0.0f}, {1, 0, 0}},
@@ -49,6 +48,9 @@ void VulkanRenderer::cleanup(VkDevice device)
     pipeline = nullptr;
     cmd = nullptr;
 
+    if (cameraPtr)
+        cameraPtr = nullptr;
+
     vkDeviceWaitIdle(device);
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) 
@@ -63,6 +65,11 @@ void VulkanRenderer::cleanup(VkDevice device)
     vertexBuffer.cleanup(device);
 
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+}
+
+void VulkanRenderer::setCamera(rc::Camera& c)
+{
+    cameraPtr = &c;
 }
 
 void VulkanRenderer::setClearValues(float r, float g, float b)
@@ -250,11 +257,14 @@ void VulkanRenderer::createUniformBuffers()
 
 void VulkanRenderer::updateUniformBuffer()
 {
+    if (cameraPtr == nullptr)
+        throw std::runtime_error("Camera is not defined! Please, use rc::SetCamera(Camera)!");
+
     UniformBufferObject ubo{};
 
-    ubo.view = glm::lookAt(glm::vec3(2, 2, 2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    ubo.view = cameraPtr->getCameraView();
 
-    ubo.proj = glm::perspective(60.f, 800.f / 600.f, 0.1f, 100.f); // 800 / 600 - IS TEST
+    ubo.proj = cameraPtr->getCameraProjection();
 
     ubo.proj[1][1] *= -1;
 

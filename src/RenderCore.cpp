@@ -1,6 +1,16 @@
 #include "RenderCore.hpp"
 #include <GLFW/glfw3.h>
 
+#include "vulkanBackend/vulkanContext.hpp"
+#include "vulkanBackend/vulkanDevice.hpp"
+#include "vulkanBackend/vulkanSwapchain.hpp"
+
+#include "vulkanBackend/render/vulkanRenderPass.hpp"
+#include "vulkanBackend/render/vulkanPipeline.hpp"
+#include "vulkanBackend/framebufferManager.hpp"
+#include "vulkanBackend/render/vulkanCommandBuffer.hpp"
+#include "vulkanBackend/render/vulkanRenderer.hpp"  
+
 namespace rc
 {
     VulkanContext context;
@@ -28,6 +38,11 @@ namespace rc
         framebuffers.init(device, swapchain, renderPass.getRenderPass());
         commandBuffer.init(device);
         renderer.init(device, swapchain, framebuffers, renderPass, pipeline, commandBuffer);
+    }
+
+    void SetCamera(rc::Camera& camera)
+    {
+        renderer.setCamera(camera);
     }
 
     void Terminate()
