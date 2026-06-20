@@ -1,0 +1,27 @@
+# ninja log v7
+1	456	1781846452232695400	CMakeFiles/RenderCore.dir/src/main.cpp.o	7702e5a4dfaf20b1
+595	1031	1781848399839308300	libRenderCore.a	63cf4781b01de34
+21	591	1781848399266000000	CMakeFiles/RenderCore.dir/src/RenderCore.cpp.o	236337a5b76800b3
+22	594	1781848399266447400	CMakeFiles/RenderCore.dir/src/window/window.cpp.o	814bd3a4d0a7b6ff
+84	7688	1781891108249166800	src/CMakeFiles/RenderCore.dir/RenderCore.cpp.o	a7d70f3d7aa4878d
+9690	11715	1781866894260614700	src/CMakeFiles/RenderCore.dir/window/window.cpp.o	886574324fecf0f0
+88	7902	1781891108252737000	examples/test/CMakeFiles/test.dir/main.cpp.o	6c28615567390e59
+7075	7616	1781892232123290100	src/libRenderCore.a	9a90f4a19f36ef9f
+7616	7895	1781892232664146600	examples/test/test	bf81f51ef6c44566
+216	1460	1781866884786391800	src/CMakeFiles/RenderCore.dir/vulkanBackend/utils.cpp.o	e0d771bc3d4d35b8
+37	9298	1781890773903747300	src/CMakeFiles/RenderCore.dir/vulkanBackend/framebufferManager.cpp.o	dbe7cc4d95b26d4f
+87	7510	1781891108252027400	src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanContext.cpp.o	6e088921bcad0390
+78	6969	1781892225126388100	src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanPipeline.cpp.o	9b982f0176c8d102
+2066	11602	1781890775932932600	src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanRenderPass.cpp.o	19e6c081bce6126a
+59	6264	1781891366400060300	src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanDevice.cpp.o	74a14f4d365997d5
+88	7978	1781891108252518700	src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanSwapchain.cpp.o	14ef6f67d9066c17
+3	473	1781891251968418200	src/CMakeFiles/RenderCore.dir/engine/window.cpp.o	73e8b72bfe8e4c43
+36	2066	1781890773902841100	src/CMakeFiles/RenderCore.dir/engine/vertex.cpp.o	6efd488ae4a07840
+41	1107	1781891810798164500	src/CMakeFiles/RenderCore.dir/engine/shader.cpp.o	73205dd7c2e3461f
+37	10608	1781890773904026500	src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanCommandBuffer.cpp.o	e4ae5a6bfd6c5409
+2133	12244	1781890775999673200	src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanRendere.cpp.o	dd8dd429a76b6bad
+9335	17147	1781890783201552000	src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanBuffer.cpp.o	92f587f278a29aae
+81	7066	1781892225129405700	src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanRenderer.cpp.o	82db1e8d6c977fb9
+6	8267	1781936720003937800	src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanRenderer.cpp.o	82db1e8d6c977fb9
+8280	9202	1781936728278207400	src/libRenderCore.a	9a90f4a19f36ef9f
+9202	9499	1781936729200613900	examples/test/test	bf81f51ef6c44566

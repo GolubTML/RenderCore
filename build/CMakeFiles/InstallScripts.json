@@ -1,0 +1,9 @@
+{
+	"InstallScripts" : 
+	[
+		"/mnt/hdd/c++/Vulkan/RenderCore/build/cmake_install.cmake",
+		"/mnt/hdd/c++/Vulkan/RenderCore/build/src/cmake_install.cmake",
+		"/mnt/hdd/c++/Vulkan/RenderCore/build/examples/test/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
