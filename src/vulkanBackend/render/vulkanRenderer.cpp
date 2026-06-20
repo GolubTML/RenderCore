@@ -6,14 +6,8 @@
 #include "vulkanBackend/render/vulkanRenderPass.hpp"
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/types.hpp"
-#include "engine/vertex.hpp"
 #include "engine/camera.hpp"
-
-std::vector<Vertex> vertices = {
-    {{0.0f, -0.5f, 0.0f}, {1, 0, 0}},
-    {{0.5f, 0.5f, 0.0f},  {0, 1, 0}},
-    {{-0.5f, 0.5f, 0.0f}, {0, 0, 1}}
-};
+#include "engine/mesh.hpp"
 
 void VulkanRenderer::init(VulkanDevice& device, 
         VulkanSwapchain& Swapchain,
@@ -28,8 +22,6 @@ void VulkanRenderer::init(VulkanDevice& device,
     renderPass = &RenderPass;
     pipeline = &Pipeline;
     cmd = &Cmd;
-
-    vertexBuffer.create(*vDevice, sizeof(Vertex) * vertices.size(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertices.data());
 
     createSyncObjects();
 
@@ -61,8 +53,6 @@ void VulkanRenderer::cleanup(VkDevice device)
 
         uniformBuffers[i].cleanup(device);
     }
-
-    vertexBuffer.cleanup(device);
 
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 }
@@ -165,16 +155,11 @@ void VulkanRenderer::endFrame()
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-void VulkanRenderer::drawTriangle()
+void VulkanRenderer::drawMesh(Mesh& mesh)
 {
     vkCmdBindPipeline(cmd->getCommandBuffers()[currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getGraphicsPipeline());
-    
-    VkBuffer buffers[] = { vertexBuffer.buffer };
-    VkDeviceSize offsets[] = { 0 };
 
-    vkCmdBindVertexBuffers(cmd->getCommandBuffers()[currentFrame], 0, 1, buffers, offsets);
-
-    vkCmdDraw(cmd->getCommandBuffers()[currentFrame], 3, 1, 0, 0);
+    mesh.draw(*cmd, currentFrame);
 }
 
 void VulkanRenderer::createDescriptorPool()

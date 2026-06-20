@@ -16,5 +16,5 @@ namespace rc
     void BeginFrame();
     void EndFrame();
 
-    void DrawTest();
+    void DrawRectangle();
 }

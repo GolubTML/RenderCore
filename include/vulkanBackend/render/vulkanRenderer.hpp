@@ -14,6 +14,8 @@ namespace rc
     class Camera;
 }
 
+class Mesh;
+
 class VulkanRenderer
 {
 public:
@@ -32,7 +34,7 @@ public:
     uint32_t beginFrame();
     void endFrame();
 
-    void drawTriangle(); // ONLY FOR TEST
+    void drawMesh(Mesh& mesh);
 
 private:
     VulkanDevice* vDevice = nullptr;
@@ -57,7 +59,6 @@ private:
     uint32_t currentFrame = 0;
     uint32_t currentImageIndex = 0;
 
-    VulkanBuffer vertexBuffer;
     rc::Camera* cameraPtr = nullptr;
 
     void createDescriptorPool();
