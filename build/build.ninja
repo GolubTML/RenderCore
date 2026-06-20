@@ -96,6 +96,15 @@ build src/CMakeFiles/RenderCore.dir/engine/shader.cpp.o: CXX_COMPILER__RenderCor
   OBJECT_FILE_DIR = src/CMakeFiles/RenderCore.dir/engine
   TARGET_SUPPORT_DIR = src/CMakeFiles/RenderCore.dir
 
+build src/CMakeFiles/RenderCore.dir/engine/texture.cpp.o: CXX_COMPILER__RenderCore_unscanned_Debug /mnt/hdd/c++/Vulkan/RenderCore/src/engine/texture.cpp || cmake_object_order_depends_target_RenderCore
+  CONFIG = Debug
+  DEP_FILE = src/CMakeFiles/RenderCore.dir/engine/texture.cpp.o.d
+  FLAGS = -g -std=gnu++20
+  INCLUDES = -I/mnt/hdd/c++/Vulkan/RenderCore/include
+  OBJECT_DIR = src/CMakeFiles/RenderCore.dir
+  OBJECT_FILE_DIR = src/CMakeFiles/RenderCore.dir/engine
+  TARGET_SUPPORT_DIR = src/CMakeFiles/RenderCore.dir
+
 build src/CMakeFiles/RenderCore.dir/engine/vertex.cpp.o: CXX_COMPILER__RenderCore_unscanned_Debug /mnt/hdd/c++/Vulkan/RenderCore/src/engine/vertex.cpp || cmake_object_order_depends_target_RenderCore
   CONFIG = Debug
   DEP_FILE = src/CMakeFiles/RenderCore.dir/engine/vertex.cpp.o.d
@@ -212,7 +221,7 @@ build src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanSwapchain.cpp.o: CXX_COM
 #############################################
 # Link the static library src/libRenderCore.a
 
-build src/libRenderCore.a: CXX_STATIC_LIBRARY_LINKER__RenderCore_Debug src/CMakeFiles/RenderCore.dir/RenderCore.cpp.o src/CMakeFiles/RenderCore.dir/engine/shader.cpp.o src/CMakeFiles/RenderCore.dir/engine/vertex.cpp.o src/CMakeFiles/RenderCore.dir/engine/window.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/framebufferManager.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanCommandBuffer.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanPipeline.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanRenderPass.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanRenderer.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/utils.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanBuffer.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanContext.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanDevice.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanSwapchain.cpp.o
+build src/libRenderCore.a: CXX_STATIC_LIBRARY_LINKER__RenderCore_Debug src/CMakeFiles/RenderCore.dir/RenderCore.cpp.o src/CMakeFiles/RenderCore.dir/engine/shader.cpp.o src/CMakeFiles/RenderCore.dir/engine/texture.cpp.o src/CMakeFiles/RenderCore.dir/engine/vertex.cpp.o src/CMakeFiles/RenderCore.dir/engine/window.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/framebufferManager.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanCommandBuffer.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanPipeline.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanRenderPass.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/render/vulkanRenderer.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/utils.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanBuffer.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanContext.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanDevice.cpp.o src/CMakeFiles/RenderCore.dir/vulkanBackend/vulkanSwapchain.cpp.o
   CONFIG = Debug
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = src/CMakeFiles/RenderCore.dir

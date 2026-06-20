@@ -8,6 +8,7 @@ void VulkanDevice::init(VulkanContext& context)
 {
     pickPhysicalDevice(context);
     createDevice(context.getSurface());
+    createQueues();
 }
 
 void VulkanDevice::cleanup()
@@ -31,6 +32,16 @@ const VkDevice& VulkanDevice::getDevice() const
 const QueueFamilyIndices& VulkanDevice::getIndices() const
 {
     return indices;
+}
+
+const VkQueue& VulkanDevice::getGraphicsQueue() const
+{
+    return graphicsQueue;
+}
+
+const VkQueue& VulkanDevice::getPresentQueue() const
+{
+    return presentQueue;
 }
 
 void VulkanDevice::createDevice(VkSurfaceKHR surface)
@@ -104,6 +115,12 @@ void VulkanDevice::pickPhysicalDevice(VulkanContext& context)
     {
         throw std::runtime_error("failed to find a suitable GPU!");
     }
+}
+
+void VulkanDevice::createQueues()
+{
+    vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
+    vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
 }
 
 bool VulkanDevice::isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface)

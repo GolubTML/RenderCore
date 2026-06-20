@@ -13,6 +13,12 @@
 },
 {
   "directory": "/mnt/hdd/c++/Vulkan/RenderCore/build",
+  "command": "/usr/bin/clang++ -I/mnt/hdd/c++/Vulkan/RenderCore/include -g -std=gnu++20 -o src/CMakeFiles/RenderCore.dir/engine/texture.cpp.o -c /mnt/hdd/c++/Vulkan/RenderCore/src/engine/texture.cpp",
+  "file": "/mnt/hdd/c++/Vulkan/RenderCore/src/engine/texture.cpp",
+  "output": "/mnt/hdd/c++/Vulkan/RenderCore/build/src/CMakeFiles/RenderCore.dir/engine/texture.cpp.o"
+},
+{
+  "directory": "/mnt/hdd/c++/Vulkan/RenderCore/build",
   "command": "/usr/bin/clang++ -I/mnt/hdd/c++/Vulkan/RenderCore/include -g -std=gnu++20 -o src/CMakeFiles/RenderCore.dir/engine/vertex.cpp.o -c /mnt/hdd/c++/Vulkan/RenderCore/src/engine/vertex.cpp",
   "file": "/mnt/hdd/c++/Vulkan/RenderCore/src/engine/vertex.cpp",
   "output": "/mnt/hdd/c++/Vulkan/RenderCore/build/src/CMakeFiles/RenderCore.dir/engine/vertex.cpp.o"

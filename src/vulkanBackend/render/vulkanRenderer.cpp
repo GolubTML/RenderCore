@@ -23,8 +23,6 @@ void VulkanRenderer::init(VulkanDevice& device,
     pipeline = &Pipeline;
     cmd = &Cmd;
 
-
-    createQueues();
     createSyncObjects();
 
     createUniformBuffers();
@@ -53,7 +51,7 @@ void VulkanRenderer::cleanup(VkDevice device)
         uniformBuffers[i].cleanup(device);
     }
 
-    vkDestroyDescriptorPool(vDevice->getDevice(), descriptorPool, nullptr);
+    vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 }
 
 uint32_t VulkanRenderer::beginFrame()
@@ -75,11 +73,12 @@ uint32_t VulkanRenderer::beginFrame()
     beginInfo.renderArea.extent = swapchain->getSwapchainExtent();
 
     // In future, make that user can type own color to clear value
-    VkClearValue clearColor{};
-    clearColor.color = {0.1f, 0.1f, 0.1f, 1.f};
+    std::array<VkClearValue, 2> clearValues{};
+    clearValues[0].color = {0.1f, 0.1f, 0.1f, 1.f};
+    clearValues[1].depthStencil = {1.f, 0};
 
-    beginInfo.clearValueCount = 1;
-    beginInfo.pClearValues = &clearColor;
+    beginInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+    beginInfo.pClearValues = clearValues.data();
 
     vkCmdBeginRenderPass(cmd->getCommandBuffers()[currentFrame], &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
@@ -89,6 +88,8 @@ uint32_t VulkanRenderer::beginFrame()
 void VulkanRenderer::endFrame()
 {
     VkCommandBuffer commandBuffer = cmd->getCommandBuffers()[currentFrame];
+
+    vkCmdEndRenderPass(commandBuffer);
 
     cmd->end(currentFrame);
 
@@ -109,7 +110,7 @@ void VulkanRenderer::endFrame()
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
 
-    if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) 
+    if (vkQueueSubmit(vDevice->getGraphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) 
         throw std::runtime_error("failed to submit draw command buffer!");
 
     VkPresentInfoKHR presentInfo{};
@@ -124,7 +125,7 @@ void VulkanRenderer::endFrame()
 
     presentInfo.pResults = nullptr;
 
-    vkQueuePresentKHR(presentQueue, &presentInfo);
+    vkQueuePresentKHR(vDevice->getPresentQueue(), &presentInfo);
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
@@ -173,29 +174,16 @@ void VulkanRenderer::createDescriptorSet()
         bufferInfo.offset = 0;
         bufferInfo.range = sizeof(UniformBufferObject);
 
-        // VkDescriptorImageInfo imageInfo{};
-        // imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        // imageInfo.imageView = nullptr; // texture should be here
-        // imageInfo.sampler = nullptr; // texture should be here
+        VkWriteDescriptorSet write{};
 
-        std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
+        write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        write.dstSet = descriptorSets[i];
+        write.dstBinding = 0;
+        write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        write.descriptorCount = 1;
+        write.pBufferInfo = &bufferInfo;
 
-        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[0].dstSet = descriptorSets[i];
-        descriptorWrites[0].dstBinding = 0;
-        descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrites[0].descriptorCount = 1;
-        descriptorWrites[0].pBufferInfo = &bufferInfo;
-
-        // descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        // descriptorWrites[1].dstSet = descriptorSets[i];
-        // descriptorWrites[1].dstBinding = 1; 
-        // descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        // descriptorWrites[1].descriptorCount = 1;
-        // descriptorWrites[1].pImageInfo = &imageInfo;
-
-
-        vkUpdateDescriptorSets(vDevice->getDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+        vkUpdateDescriptorSets(vDevice->getDevice(), 1, &write, 0, nullptr);
     }
 }
 
@@ -231,14 +219,6 @@ void VulkanRenderer::updateUniformBuffer()
     ubo.proj[1][1] *= -1;
 
     memcpy(uniformBuffersMapped[currentFrame], &ubo, sizeof(ubo));
-}
-
-void VulkanRenderer::createQueues()
-{
-    QueueFamilyIndices indices = vDevice->getIndices();
-
-    vkGetDeviceQueue(vDevice->getDevice(), indices.graphicsFamily.value(), 0, &graphicsQueue);
-    vkGetDeviceQueue(vDevice->getDevice(), indices.presentFamily.value(), 0, &presentQueue);
 }
 
 void VulkanRenderer::createSyncObjects()

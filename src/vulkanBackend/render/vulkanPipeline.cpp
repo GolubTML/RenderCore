@@ -28,7 +28,7 @@ void VulkanPipeline::init(const VulkanSwapchain& swapchain, VkDevice device, VkR
     }
 
     graphicsPipeline = createPipeline(swapchain, device, 
-        renderPass,  "/mnt/hdd/c++/Vulkan/RenderCore/build/examples/test/shaders/shader_vert.spv", "/mnt/hdd/c++/Vulkan/RenderCore/build/examples/test/shaders/shader_frag.spv", 
+        renderPass,  "/mnt/hdd/c++/Vulkan/RenderCore/build/examples/test/shaders/default_vert.spv", "/mnt/hdd/c++/Vulkan/RenderCore/build/examples/test/shaders/default_frag.spv", 
         VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, VK_POLYGON_MODE_FILL);
 }
 

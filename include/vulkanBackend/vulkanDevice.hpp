@@ -24,7 +24,11 @@ public:
 
     const VkPhysicalDevice& getPhysicalDevice() const;
     const VkDevice& getDevice() const;
+
     const QueueFamilyIndices& getIndices() const;
+
+    const VkQueue& getGraphicsQueue() const;
+    const VkQueue& getPresentQueue() const;
 
 private:
     std::vector<const char*> deviceExtensions;
@@ -32,10 +36,14 @@ private:
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
     VkDevice device = VK_NULL_HANDLE;
 
-    QueueFamilyIndices indices;
+    VkQueue graphicsQueue;
+    VkQueue presentQueue;
 
+    QueueFamilyIndices indices;
+    
     void createDevice(VkSurfaceKHR surface);
     void pickPhysicalDevice(VulkanContext& context);
+    void createQueues();
 
     bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface);
     bool chechDeviceExtensionSupport(VkPhysicalDevice device);

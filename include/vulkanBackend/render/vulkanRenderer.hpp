@@ -32,11 +32,6 @@ private:
     VulkanPipeline* pipeline = nullptr;
     VulkanCommandBuffer* cmd = nullptr;
 
-    // bad idea with queues here
-    // will FIX later
-    VkQueue graphicsQueue; 
-    VkQueue presentQueue;
-
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
     std::vector<VkFence> inFlightFences;
@@ -55,8 +50,6 @@ private:
 
     void createUniformBuffers();
     void updateUniformBuffer();
-
-    void createQueues();
 
     void createSyncObjects();
     // record command buffer?
