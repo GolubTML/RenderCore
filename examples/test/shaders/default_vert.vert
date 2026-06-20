@@ -5,8 +5,20 @@ layout(location = 1) in vec3 inColor;
 
 layout(location = 0) out vec3 fragColor;
 
+layout(set = 0, binding = 0) uniform CameraUBO
+{
+    mat4 view;
+    mat4 proj;
+} camera;
+
+layout(push_constant) uniform PushModel
+{
+    mat4 model;
+} pc;
+
 void main()
 {
-    gl_Position = vec4(inPos, 1.0);
     fragColor = inColor;
+    
+    gl_Position = camera.proj * camera.view * pc.model * vec4(inPos, 1.0);
 }

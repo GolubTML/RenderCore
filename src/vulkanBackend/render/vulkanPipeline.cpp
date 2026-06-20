@@ -51,6 +51,11 @@ VkPipeline& VulkanPipeline::getGraphicsPipeline()
     return graphicsPipeline;
 }
 
+const VkPipelineLayout& VulkanPipeline::getPipelineLayout() const
+{
+    return pipelineLayout;
+}
+
 void VulkanPipeline::createDescriptorSetLayout(VkDevice device)
 {
     VkDescriptorSetLayoutBinding uboLayoutBinding{};

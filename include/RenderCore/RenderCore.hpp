@@ -2,7 +2,7 @@
 
 #include "engine/window.hpp"
 #include "engine/camera.hpp"
-#include "engine/mesh.hpp"
+#include "engine/renderItem.hpp"
 
 #include "RenderCore/rcTypes.hpp"
 
@@ -19,8 +19,8 @@ namespace rc
     void BeginFrame();
     void EndFrame();
 
-    void DrawMesh(Mesh& mesh);
-    void DestroyMesh(Mesh& mesh);
+    void DrawObject(RenderItem& item);
+    void DestroyObject(RenderItem& item);
 
-    Mesh CreateRectangle(float w, float h, const Color& color);
+    RenderItem CreateRectangle(const glm::vec3& position, float w, float h, const Color& color);
 }

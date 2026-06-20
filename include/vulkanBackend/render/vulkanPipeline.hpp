@@ -17,6 +17,7 @@ public:
     
     const VkDescriptorSetLayout& getDescriptorSetLayout() const;
     VkPipeline& getGraphicsPipeline();
+    const VkPipelineLayout& getPipelineLayout() const;
 
 private:
     VkDescriptorSetLayout descriptorSetLayout;

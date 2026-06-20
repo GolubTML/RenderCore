@@ -12,7 +12,7 @@ class VulkanRenderPass;
 namespace rc
 {
     class Camera;
-    class Mesh;
+    class RenderItem;
 }
 
 class VulkanRenderer
@@ -33,7 +33,7 @@ public:
     uint32_t beginFrame();
     void endFrame();
 
-    void drawMesh(rc::Mesh& mesh);
+    void draw(rc::RenderItem& item);
 
 private:
     VulkanDevice* vDevice = nullptr;
@@ -67,5 +67,4 @@ private:
     void updateUniformBuffer();
 
     void createSyncObjects();
-    // record command buffer?
 };

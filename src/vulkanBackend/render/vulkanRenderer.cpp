@@ -7,7 +7,7 @@
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/types.hpp"
 #include "engine/camera.hpp"
-#include "engine/mesh.hpp"
+#include "engine/renderItem.hpp"
 
 void VulkanRenderer::init(VulkanDevice& device, 
         VulkanSwapchain& Swapchain,
@@ -155,11 +155,18 @@ void VulkanRenderer::endFrame()
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-void VulkanRenderer::drawMesh(rc::Mesh& mesh)
+void VulkanRenderer::draw(rc::RenderItem& item)
 {
-    vkCmdBindPipeline(cmd->getCommandBuffers()[currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getGraphicsPipeline());
+    auto cmdBuf = cmd->getCommandBuffers()[currentFrame];
 
-    mesh.draw(*cmd, currentFrame);
+    vkCmdBindPipeline(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getGraphicsPipeline());
+
+    vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getPipelineLayout(), 0, 1, &descriptorSets[currentFrame], 0, nullptr);
+
+    glm::mat4 model = item.transform.getModelMatrix();
+    vkCmdPushConstants(cmdBuf, pipeline->getPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
+
+    item.mesh.draw(*cmd, currentFrame);
 }
 
 void VulkanRenderer::createDescriptorPool()

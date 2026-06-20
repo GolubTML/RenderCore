@@ -12,10 +12,10 @@ int main()
     rc::Window window(description);
     rc::InitVulkan(window);
 
-    rc::Camera camera(glm::vec3(0.f), 45.f, description.width, description.height);
+    rc::Camera camera(glm::vec3(0.f, 0.f, 6.f), 60.f, description.width, description.height);
     rc::SetCamera(camera);
 
-    auto rectangle = rc::CreateRectangle(1.f, 1.f, { 255, 255, 255 });
+    auto rectangle = rc::CreateRectangle({2.f, 2.f, 0.f}, 1.f, 1.f, { 255, 255, 255 });
 
     while (!window.ShouldClose())
     {
@@ -25,12 +25,12 @@ int main()
 
         rc::BeginFrame();
             // some cool code here
-            rc::DrawMesh(rectangle);
+            rc::DrawObject(rectangle);
 
         rc::EndFrame();
     }
 
-    rc::DestroyMesh(rectangle);
+    rc::DestroyObject(rectangle);
     
     rc::Terminate();
 }

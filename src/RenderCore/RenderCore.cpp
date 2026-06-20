@@ -78,23 +78,28 @@ namespace rc
         renderer.endFrame();
     }
 
-    void DrawMesh(Mesh& mesh)
+    void DrawObject(RenderItem& item)
     {
-        renderer.drawMesh(mesh);
+        renderer.draw(item);
     }
 
-    void DestroyMesh(Mesh& mesh)
+    void DestroyObject(RenderItem& item)
     {
-        mesh.cleanup(device.getDevice());
+        item.mesh.cleanup(device.getDevice());
     }
 
-    Mesh CreateRectangle(float w, float h, const Color& color)
+    RenderItem CreateRectangle(const glm::vec3& position, float w, float h, const Color& color)
     {
         auto data = Geometry::CreateRectangleData(w, h, color);
 
-        Mesh mesh;
-        mesh.create(device, data.first, data.second);
+        RenderItem item 
+        {
+            .mesh = Mesh{},
+            .transform = {position, glm::vec3{0.f}, glm::vec3{1.f}}
+        };
 
-        return mesh;
+        item.mesh.create(device, data.first, data.second);
+
+        return item;
     }
 }
