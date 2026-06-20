@@ -26,6 +26,8 @@ public:
     uint32_t beginFrame();
     void endFrame();
 
+    void drawTriangle(); // ONLY FOR TEST
+
 private:
     VulkanDevice* vDevice = nullptr;
     VulkanSwapchain* swapchain = nullptr;
@@ -48,6 +50,8 @@ private:
 
     uint32_t currentFrame = 0;
     uint32_t currentImageIndex = 0;
+
+    VulkanBuffer vertexBuffer;
 
     void createDescriptorPool();
     void createDescriptorSet();

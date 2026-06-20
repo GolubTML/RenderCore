@@ -22,4 +22,6 @@ namespace rc
     void ClearColor(float r, float g, float b);
     void BeginFrame();
     void EndFrame();
+
+    void DrawTest();
 }

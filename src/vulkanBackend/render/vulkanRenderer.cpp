@@ -6,8 +6,15 @@
 #include "vulkanBackend/render/vulkanRenderPass.hpp"
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/types.hpp"
+#include "engine/vertex.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
+
+std::vector<Vertex> vertices = {
+    {{0.0f, -0.5f, 0.0f}, {1, 0, 0}},
+    {{0.5f, 0.5f, 0.0f},  {0, 1, 0}},
+    {{-0.5f, 0.5f, 0.0f}, {0, 0, 1}}
+};
 
 void VulkanRenderer::init(VulkanDevice& device, 
         VulkanSwapchain& Swapchain,
@@ -22,6 +29,8 @@ void VulkanRenderer::init(VulkanDevice& device,
     renderPass = &RenderPass;
     pipeline = &Pipeline;
     cmd = &Cmd;
+
+    vertexBuffer.create(*vDevice, sizeof(Vertex) * vertices.size(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertices.data());
 
     createSyncObjects();
 
@@ -50,6 +59,8 @@ void VulkanRenderer::cleanup(VkDevice device)
 
         uniformBuffers[i].cleanup(device);
     }
+
+    vertexBuffer.cleanup(device);
 
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 }
@@ -82,6 +93,22 @@ uint32_t VulkanRenderer::beginFrame()
     beginInfo.pClearValues = clearValues.data();
 
     vkCmdBeginRenderPass(cmd->getCommandBuffers()[currentFrame], &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+    VkViewport viewport{};
+    viewport.x = 0.0f;
+    viewport.y = 0.0f;
+    viewport.width = (float)swapchain->getSwapchainExtent().width;
+    viewport.height = (float)swapchain->getSwapchainExtent().height;
+    viewport.minDepth = 0.0f;
+    viewport.maxDepth = 1.0f;
+
+    vkCmdSetViewport(cmd->getCommandBuffers()[currentFrame], 0, 1, &viewport);
+
+    VkRect2D scissor{};
+    scissor.offset = {0, 0};
+    scissor.extent = swapchain->getSwapchainExtent();
+
+    vkCmdSetScissor(cmd->getCommandBuffers()[currentFrame], 0, 1, &scissor);
 
     return currentImageIndex;
 }
@@ -129,6 +156,18 @@ void VulkanRenderer::endFrame()
     vkQueuePresentKHR(vDevice->getPresentQueue(), &presentInfo);
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+}
+
+void VulkanRenderer::drawTriangle()
+{
+    vkCmdBindPipeline(cmd->getCommandBuffers()[currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getGraphicsPipeline());
+    
+    VkBuffer buffers[] = { vertexBuffer.buffer };
+    VkDeviceSize offsets[] = { 0 };
+
+    vkCmdBindVertexBuffers(cmd->getCommandBuffers()[currentFrame], 0, 1, buffers, offsets);
+
+    vkCmdDraw(cmd->getCommandBuffers()[currentFrame], 3, 1, 0, 0);
 }
 
 void VulkanRenderer::createDescriptorPool()

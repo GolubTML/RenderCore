@@ -60,4 +60,9 @@ namespace rc
     {
         renderer.endFrame();
     }
+
+    void DrawTest()
+    {
+        renderer.drawTriangle();
+    }
 }

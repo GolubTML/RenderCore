@@ -22,6 +22,8 @@ int main()
 
         rc::BeginFrame();
             // some cool code here
+            rc::DrawTest();
+
         rc::EndFrame();
     }
     
