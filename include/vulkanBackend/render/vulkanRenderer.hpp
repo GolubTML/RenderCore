@@ -47,6 +47,8 @@ private:
 
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;
+
+    std::vector<VkFence> imagesInFlight;
     std::vector<VkFence> inFlightFences;
 
     std::vector<VulkanBuffer> uniformBuffers;

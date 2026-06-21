@@ -47,11 +47,16 @@ void VulkanRenderer::cleanup(VkDevice device)
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) 
     {
-        vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
         vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
+
         vkDestroyFence(device, inFlightFences[i], nullptr);
 
         uniformBuffers[i].cleanup(device);
+    }
+
+    for (size_t i = 0; i < renderFinishedSemaphores.size(); i++)
+    {
+        vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
     }
 
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
@@ -73,6 +78,11 @@ uint32_t VulkanRenderer::beginFrame()
     vkWaitForFences(vDevice->getDevice(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     vkAcquireNextImageKHR(vDevice->getDevice(), swapchain->getSwapchain(), UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &currentImageIndex);
+    
+    if (imagesInFlight[currentImageIndex] != VK_NULL_HANDLE)
+        vkWaitForFences(vDevice->getDevice(), 1, &imagesInFlight[currentImageIndex], VK_TRUE, UINT64_MAX);
+
+    imagesInFlight[currentImageIndex] = inFlightFences[currentFrame];
 
     vkResetFences(vDevice->getDevice(), 1, &inFlightFences[currentFrame]);
     updateUniformBuffer();
@@ -130,7 +140,7 @@ void VulkanRenderer::endFrame()
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = &cmd->getCommandBuffers()[currentFrame];
 
-    VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
+    VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentImageIndex]};
 
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
@@ -264,7 +274,9 @@ void VulkanRenderer::updateUniformBuffer()
 void VulkanRenderer::createSyncObjects()
 {   
     imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-    renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+    renderFinishedSemaphores.resize(swapchain->getSwapChainImages().size());
+
+    imagesInFlight.resize(swapchain->getSwapChainImages().size(), VK_NULL_HANDLE);
     inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
 
     VkSemaphoreCreateInfo semaphoreInfo{};
@@ -277,10 +289,17 @@ void VulkanRenderer::createSyncObjects()
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
     {
         if (vkCreateSemaphore(vDevice->getDevice(), &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS 
-        || vkCreateSemaphore(vDevice->getDevice(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS
         || vkCreateFence(vDevice->getDevice(), &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS)
         {
             throw std::runtime_error("Cannot create semaphores!");
+        }
+    }
+
+    for (size_t i = 0; i < renderFinishedSemaphores.size(); ++i)
+    {
+        if (vkCreateSemaphore(vDevice->getDevice(), &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS)
+        {
+            throw std::runtime_error("Cannot create render finished semaphores!");
         }
     }
 }
