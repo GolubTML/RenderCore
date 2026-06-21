@@ -6,6 +6,7 @@
 #include "engine/renderItem.hpp"
 
 #include "RenderCore/rcTypes.hpp"
+#include "RenderCore/rcTime.hpp"
 
 namespace rc
 {

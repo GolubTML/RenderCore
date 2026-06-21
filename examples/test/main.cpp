@@ -1,13 +1,16 @@
 #include <RenderCore/RenderCore.hpp>
+#include <iostream>
 
 int main()
 {
     rc::Init();
 
-    rc::WindowDesc description{};
-    description.width = 800;
-    description.height = 600;
-    description.title = "Test";
+    rc::WindowDesc description
+    {
+        .width = 800,
+        .height = 600,
+        .title = "Test"
+    };
 
     rc::Window window(description);
     rc::InitVulkan(window);
