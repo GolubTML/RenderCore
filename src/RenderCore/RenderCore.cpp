@@ -88,14 +88,14 @@ namespace rc
         item.mesh.cleanup(device.getDevice());
     }
 
-    RenderItem CreateRectangle(const glm::vec3& position, float w, float h, const Color& color)
+    RenderItem CreateRectangle(const glm::vec2& position, float w, float h, const Color& color)
     {
         auto data = Geometry::CreateRectangleData(w, h, color);
 
         RenderItem item 
         {
             .mesh = Mesh{},
-            .transform = {position, glm::vec3{0.f}, glm::vec3{1.f}}
+            .transform = {glm::vec3(position.x, position.y, 0.f), glm::vec3{0.f}, glm::vec3{1.f}}
         };
 
         item.mesh.create(device, data.first, data.second);

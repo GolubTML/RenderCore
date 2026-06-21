@@ -43,6 +43,8 @@ void VulkanBuffer::create(const VulkanDevice& vDevice, VkDeviceSize bufferSize, 
 
 void VulkanBuffer::cleanup(VkDevice device)
 {
+    vkDeviceWaitIdle(device); // NOT A GOOD IDEA
+
     if (buffer != VK_NULL_HANDLE)
         vkDestroyBuffer(device, buffer, nullptr);
     

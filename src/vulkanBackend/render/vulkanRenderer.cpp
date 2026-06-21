@@ -6,7 +6,7 @@
 #include "vulkanBackend/render/vulkanRenderPass.hpp"
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/types.hpp"
-#include "engine/camera.hpp"
+#include "engine/camera/camera.hpp"
 #include "engine/renderItem.hpp"
 
 void VulkanRenderer::init(VulkanDevice& device, 
@@ -254,11 +254,9 @@ void VulkanRenderer::updateUniformBuffer()
 
     UniformBufferObject ubo{};
 
-    ubo.view = cameraPtr->getCameraView();
+    ubo.view = cameraPtr->getView();
 
-    ubo.proj = cameraPtr->getCameraProjection();
-
-    ubo.proj[1][1] *= -1;
+    ubo.proj = cameraPtr->getProjection();
 
     memcpy(uniformBuffersMapped[currentFrame], &ubo, sizeof(ubo));
 }
