@@ -1,15 +1,28 @@
 #include <RenderCore/RenderCore.hpp>
 #include <iostream>
 
+void input(glm::vec3& pos, float dt)
+{
+    // we will be using methods from rc::Input
+    // and rc::Key too
+    float speed = 60.f;
+
+    if (rc::Input::IsKeyPressed(rc::Key::W)) pos.y -= speed * dt;
+    if (rc::Input::IsKeyPressed(rc::Key::S)) pos.y += speed * dt;
+    if (rc::Input::IsKeyPressed(rc::Key::A)) pos.x -= speed * dt;
+    if (rc::Input::IsKeyPressed(rc::Key::D)) pos.x += speed * dt;
+}
+
 int main()
 {
+    // GLFW init here
     rc::Init();
 
     rc::WindowDesc description
     {
         .width = 800,
         .height = 600,
-        .title = "Test"
+        .title = "Input Examle"
     };
 
     rc::Window window(description);
@@ -18,16 +31,14 @@ int main()
     rc::Shader vertex = rc::LoadShader("shaders/default_vert.spv", rc::ShaderType::VERTEX);
     rc::Shader fragment = rc::LoadShader("shaders/default_frag.spv", rc::ShaderType::FRAGMENT);
 
-    // set up shaders
     rc::SetShaders(vertex, fragment);
 
     rc::Camera2D camera(description.width, description.height);
     rc::SetCamera(camera);
 
-    glm::vec2 pos = {300.f, 200.f};
+    glm::vec2 pos = {400.f, 300.f};
 
-    auto rectangle = rc::CreateRectangle(pos, 80.f, 40.f, { 255, 255, 255 });
-    auto rectangle2 = rc::CreateRectangle({500.f, 400.f}, 70.f, 70.f, { 0, 255, 255 });
+    auto rectangle = rc::CreateRectangle(pos, 40.f, 40.f, { 255, 255, 255 });
 
     while (!window.ShouldClose())
     {
@@ -36,16 +47,16 @@ int main()
 
         rc::ClearColor(0.2f, 0.2f, 0.2f);
 
+        input(rectangle.transform.position, dt);
+
         rc::BeginFrame();
 
             rc::DrawObject(rectangle);
-            rc::DrawObject(rectangle2);
 
         rc::EndFrame();
     }
 
     rc::DestroyObject(rectangle);
-    rc::DestroyObject(rectangle2);
 
     window.Terminate();
 

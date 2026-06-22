@@ -9,4 +9,5 @@ find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 
 add_subdirectory(src/)
-add_subdirectory(examples/test/)
+# add_subdirectory(examples/test/)
+add_subdirectory(examples/inputExample/)

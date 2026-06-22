@@ -1,5 +1,5 @@
 #include "RenderCore/RenderCore.hpp"
-#include <GLFW/glfw3.h>
+#include "RenderCore/rcInternal.hpp" 
 
 #include "vulkanBackend/vulkanContext.hpp"
 #include "vulkanBackend/vulkanDevice.hpp"
@@ -14,6 +14,15 @@
 #include "RenderCore/rcGeometry.hpp"
 
 #include <filesystem>
+
+
+namespace rc::Internal
+{
+    GLFWwindow* gWindow = nullptr;
+
+    bool currentKeys[GLFW_KEY_LAST] = {};
+    bool previousKeys[GLFW_KEY_LAST] = {};
+}
 
 namespace rc
 {
@@ -33,6 +42,8 @@ namespace rc
 
     void InitVulkan(Window& window)
     {
+        Internal::gWindow = window.getWindowHandle();
+
         context.init(window);
         device.init(context);
         swapchain.init(device, context, window);
@@ -81,6 +92,7 @@ namespace rc
     void BeginFrame()
     {
         renderer.beginFrame();
+        Internal::UpdateInput();
     }
 
     void EndFrame()
@@ -92,6 +104,7 @@ namespace rc
     {
         renderer.draw(item);
     }
+
 
     void DestroyObject(RenderItem& item)
     {

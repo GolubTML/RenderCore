@@ -8,6 +8,7 @@
 
 #include "RenderCore/rcTypes.hpp"
 #include "RenderCore/rcTime.hpp"
+#include "RenderCore/rcInput.hpp"
 
 namespace rc
 {
