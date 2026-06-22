@@ -4,7 +4,7 @@
 #include "engine/vertex.hpp"
 #include <glm/glm.hpp>
 
-void VulkanPipeline::init(const VulkanSwapchain& swapchain, VkDevice device, VkRenderPass renderPass)
+void VulkanPipeline::init(VkDevice device)
 {
     createDescriptorSetLayout(device);
 
@@ -23,12 +23,21 @@ void VulkanPipeline::init(const VulkanSwapchain& swapchain, VkDevice device, VkR
     pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; 
 
     if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
-    {
         throw std::runtime_error("Cannot create pipeline layout");
-    }
+
+    graphicsPipeline = VK_NULL_HANDLE;
+}
+
+void VulkanPipeline::build(const VulkanSwapchain& swapchain, VkDevice device, VkRenderPass renderPass)
+{
+    if (!vertexShader.has_value() || !fragmentShader.has_value())
+        throw std::runtime_error("Shaders must be set before creating pipeline!");
+
+    if (graphicsPipeline != VK_NULL_HANDLE)
+        vkDestroyPipeline(device, graphicsPipeline, nullptr);
 
     graphicsPipeline = createPipeline(swapchain, device, 
-        renderPass,  "/mnt/hdd/c++/Vulkan/RenderCore/examples/test/shaders/default_vert.spv", "/mnt/hdd/c++/Vulkan/RenderCore/examples/test/shaders/default_frag.spv", 
+        renderPass, 
         VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, VK_POLYGON_MODE_FILL);
 }
 
@@ -39,6 +48,12 @@ void VulkanPipeline::cleanup(VkDevice device)
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 
     vkDestroyPipeline(device, graphicsPipeline, nullptr);
+
+    if (vertexShader.has_value())
+        vertexShader->cleanup(device);
+
+    if (fragmentShader.has_value())
+        fragmentShader->cleanup(device);
 }
 
 const VkDescriptorSetLayout& VulkanPipeline::getDescriptorSetLayout() const
@@ -88,13 +103,9 @@ void VulkanPipeline::createDescriptorSetLayout(VkDevice device)
 
 VkPipeline VulkanPipeline::createPipeline(const VulkanSwapchain& swapchain, 
         VkDevice device, VkRenderPass renderPass, 
-        const std::string& vertPath, const std::string& fragPath,
         VkPrimitiveTopology topology, VkPolygonMode polygonMode)
 {
-    Shader vertexShader(vertPath, device, VK_SHADER_STAGE_VERTEX_BIT);
-    Shader fragmentShader(fragPath, device, VK_SHADER_STAGE_FRAGMENT_BIT);
-
-    VkPipelineShaderStageCreateInfo shaderStages[] = {vertexShader.getStageInfo(), fragmentShader.getStageInfo()};
+    VkPipelineShaderStageCreateInfo shaderStages[] = {vertexShader->getStageInfo(), fragmentShader->getStageInfo()};
 
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -221,8 +232,15 @@ VkPipeline VulkanPipeline::createPipeline(const VulkanSwapchain& swapchain,
         throw std::runtime_error("Cannot create graphics pipeline!");
     }
 
-    vertexShader.cleanup(device);
-    fragmentShader.cleanup(device);
-
     return result;
+}
+
+void VulkanPipeline::setVertexShader(rc::Shader vertex)
+{
+    vertexShader = std::move(vertex);
+}
+
+void VulkanPipeline::setFragmentShader(rc::Shader frag)
+{
+    fragmentShader = std::move(frag);
 }

@@ -16,7 +16,9 @@ namespace rc
     {
     public:
         Window(const WindowDesc& desc);
-        ~Window();
+        ~Window() = default;
+
+        void Terminate();
 
         bool ShouldClose();
         void PollEvents();

@@ -10,7 +10,7 @@ namespace rc
         handle = glfwCreateWindow(desc.width, desc.height, desc.title.c_str(), nullptr, nullptr);
     }
 
-    Window::~Window()
+    void Window::Terminate()
     {
         if (handle)
             glfwDestroyWindow(handle);

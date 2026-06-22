@@ -13,6 +13,8 @@
 
 #include "RenderCore/rcGeometry.hpp"
 
+#include <filesystem>
+
 namespace rc
 {
     VulkanContext context;
@@ -35,7 +37,7 @@ namespace rc
         device.init(context);
         swapchain.init(device, context, window);
         renderPass.init(device, swapchain);
-        pipeline.init(swapchain, device.getDevice(), renderPass.getRenderPass());
+        pipeline.init(device.getDevice());
 
         framebuffers.init(device, swapchain, renderPass.getRenderPass());
         commandBuffer.init(device);
@@ -45,6 +47,14 @@ namespace rc
     void SetCamera(rc::Camera& camera)
     {
         renderer.setCamera(camera);
+    }
+
+    void SetShaders(Shader vertex, Shader fragment)
+    {   
+        pipeline.setVertexShader(std::move(vertex));
+        pipeline.setFragmentShader(std::move(fragment));
+
+        pipeline.build(swapchain, device.getDevice(), renderPass.getRenderPass());
     }
 
     void Terminate()
@@ -101,5 +111,23 @@ namespace rc
         item.mesh.create(device, data.first, data.second);
 
         return item;
+    }
+
+    Shader LoadShader(const std::string& path, ShaderType type)
+    {
+        std::filesystem::path exeDir = std::filesystem::canonical("/proc/self/exe").parent_path();
+        std::filesystem::path fullPath = exeDir / path;
+
+        switch (type)
+        {
+            case ShaderType::VERTEX:
+                return Shader(fullPath.string(), device.getDevice(), VK_SHADER_STAGE_VERTEX_BIT);
+
+            case ShaderType::FRAGMENT:
+                return Shader(fullPath.string(), device.getDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
+
+            default:
+                throw std::invalid_argument("Unsupported shader type!");
+        }
     }
 }

@@ -4,19 +4,28 @@
 #include <vector>
 #include <vulkan/vulkan.h>
 
-class Shader
+namespace rc
 {
-public:
-    Shader(const std::string& path, VkDevice device, VkShaderStageFlagBits shaderFlag);
+    enum class ShaderType
+    {
+        VERTEX,
+        FRAGMENT
+    };
 
-    void load(const std::string& path, VkDevice device, VkShaderStageFlagBits shaderFlag);
-    void cleanup(VkDevice device);
+    class Shader
+    {
+    public:
+        Shader(const std::string& path, VkDevice device, VkShaderStageFlagBits shaderFlag);
 
-    VkPipelineShaderStageCreateInfo getStageInfo() const;
+        void load(const std::string& path, VkDevice device, VkShaderStageFlagBits shaderFlag);
+        void cleanup(VkDevice device);
 
-private:
-    VkShaderModule module;
-    VkPipelineShaderStageCreateInfo shaderStage{};
+        VkPipelineShaderStageCreateInfo getStageInfo() const;
 
-    std::vector<char> readFile(const std::string& path);
-};
+    private:
+        VkShaderModule module;
+        VkPipelineShaderStageCreateInfo shaderStage{};
+
+        std::vector<char> readFile(const std::string& path);
+    };
+}
