@@ -12,6 +12,8 @@ namespace rc
         glm::mat4 getView() const override;
         glm::mat4 getProjection() const override;
 
+        void onResize(int width, int height) override;
+
         glm::vec3 position{0.f};
 
     private:

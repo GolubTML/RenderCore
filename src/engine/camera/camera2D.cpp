@@ -18,4 +18,10 @@ namespace rc
     {
         return glm::ortho(0.f, width, 0.f, height, -1.f, 1.f);
     }
+
+    void Camera2D::onResize(int width, int height) 
+    {
+        this->width = width;
+        this->height = height;
+    }
 }

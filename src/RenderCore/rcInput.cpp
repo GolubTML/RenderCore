@@ -1,7 +1,7 @@
 #include "RenderCore/rcInput.hpp"
 #include "RenderCore/rcInternal.hpp"
 
-#include <GLFW/glfw3.h>
+#include "engine/window.hpp"
 
 namespace rc
 {
@@ -70,7 +70,7 @@ namespace rc
     {
         bool IsKeyPressed(Key key)
         {
-            return glfwGetKey(Internal::gWindow, toGLFW(key)) == GLFW_PRESS;
+            return glfwGetKey(Internal::gWindow->getWindowHandle(), toGLFW(key)) == GLFW_PRESS;
         }
 
         bool IsKeyDown(Key key)

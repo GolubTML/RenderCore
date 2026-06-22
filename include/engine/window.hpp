@@ -10,11 +10,15 @@ namespace rc
         int width;
         int height;
         std::string title;
+
+        bool resizable = false;
     };
 
     class Window
     {
     public:
+        bool framebufferResized = false;
+
         Window(const WindowDesc& desc);
         ~Window() = default;
 

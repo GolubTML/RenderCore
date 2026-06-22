@@ -1,5 +1,7 @@
 #include "RenderCore/rcInternal.hpp"
 
+#include "engine/window.hpp"
+
 namespace rc::Internal
 {
     void UpdateInput()
@@ -7,7 +9,7 @@ namespace rc::Internal
         for (int i = 0; i < GLFW_KEY_LAST; ++i)
         {
             previousKeys[i] = currentKeys[i];
-            currentKeys[i] = glfwGetKey(gWindow, i) == GLFW_PRESS;
+            currentKeys[i] = glfwGetKey(gWindow->getWindowHandle(), i) == GLFW_PRESS;
         }
     }
 }

@@ -22,7 +22,8 @@ int main()
     {
         .width = 800,
         .height = 600,
-        .title = "Input Examle"
+        .title = "Input Examle",
+        .resizable = true // Yeah, RESIZEBLE WINDOW!!!
     };
 
     rc::Window window(description);

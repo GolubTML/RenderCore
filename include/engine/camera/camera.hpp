@@ -13,5 +13,7 @@ namespace rc
 
         virtual glm::mat4 getView() const = 0;
         virtual glm::mat4 getProjection() const = 0;
+
+        virtual void onResize(int width, int height) = 0;
     };
 }

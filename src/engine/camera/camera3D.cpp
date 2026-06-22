@@ -22,4 +22,10 @@ namespace rc
 
         return projection;
     }
+
+    void Camera3D::onResize(int width, int height)
+    {
+        this->width = width;
+        this->height = height;
+    }
 }

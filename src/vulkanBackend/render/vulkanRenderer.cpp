@@ -62,6 +62,25 @@ void VulkanRenderer::cleanup(VkDevice device)
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 }
 
+void VulkanRenderer::onSwapchainRecreated()
+{
+    imagesInFlight.assign(swapchain->getSwapChainImages().size(), VK_NULL_HANDLE);
+
+    for (auto& sem : renderFinishedSemaphores)
+        vkDestroySemaphore(vDevice->getDevice(), sem, nullptr);
+
+    renderFinishedSemaphores.resize(swapchain->getSwapChainImages().size());
+
+    VkSemaphoreCreateInfo semaphoreInfo{};
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    
+    for (auto& sem : renderFinishedSemaphores)
+    {
+        if (vkCreateSemaphore(vDevice->getDevice(), &semaphoreInfo, nullptr, &sem) != VK_SUCCESS)
+            throw std::runtime_error("Cannot recreate semaphores after resize!");
+    }
+}
+
 void VulkanRenderer::setCamera(rc::Camera& c)
 {
     cameraPtr = &c;
@@ -73,12 +92,12 @@ void VulkanRenderer::setClearValues(float r, float g, float b)
     clearValues[1].depthStencil = {1.f, 0};
 }
 
-uint32_t VulkanRenderer::beginFrame()
+void VulkanRenderer::beginFrame()
 {
     vkWaitForFences(vDevice->getDevice(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     vkAcquireNextImageKHR(vDevice->getDevice(), swapchain->getSwapchain(), UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &currentImageIndex);
-    
+
     if (imagesInFlight[currentImageIndex] != VK_NULL_HANDLE)
         vkWaitForFences(vDevice->getDevice(), 1, &imagesInFlight[currentImageIndex], VK_TRUE, UINT64_MAX);
 
@@ -116,8 +135,6 @@ uint32_t VulkanRenderer::beginFrame()
     scissor.extent = swapchain->getSwapchainExtent();
 
     vkCmdSetScissor(cmd->getCommandBuffers()[currentFrame], 0, 1, &scissor);
-
-    return currentImageIndex;
 }
     
 void VulkanRenderer::endFrame()
@@ -163,6 +180,13 @@ void VulkanRenderer::endFrame()
     vkQueuePresentKHR(vDevice->getPresentQueue(), &presentInfo);
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+    
+    // if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+    //     return true;
+    // else if(result != VK_SUCCESS)
+    //     throw std::runtime_error("Failed to present frame!");
+
+    // return false;
 }
 
 void VulkanRenderer::draw(rc::RenderItem& item)

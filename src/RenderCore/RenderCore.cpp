@@ -14,11 +14,13 @@
 #include "RenderCore/rcGeometry.hpp"
 
 #include <filesystem>
+#include <iostream>
 
 
 namespace rc::Internal
 {
-    GLFWwindow* gWindow = nullptr;
+    Window* gWindow = nullptr;
+    Camera* gCamera = nullptr;
 
     bool currentKeys[GLFW_KEY_LAST] = {};
     bool previousKeys[GLFW_KEY_LAST] = {};
@@ -42,7 +44,7 @@ namespace rc
 
     void InitVulkan(Window& window)
     {
-        Internal::gWindow = window.getWindowHandle();
+        Internal::gWindow = &window;
 
         context.init(window);
         device.init(context);
@@ -58,6 +60,8 @@ namespace rc
     void SetCamera(rc::Camera& camera)
     {
         renderer.setCamera(camera);
+
+        Internal::gCamera = &camera;
     }
 
     void SetShaders(Shader vertex, Shader fragment)
@@ -91,7 +95,39 @@ namespace rc
 
     void BeginFrame()
     {
+        bool needResize = Internal::gWindow->framebufferResized;
+
+        if (needResize)
+        {
+            std::cout << "Result: " << needResize << "\n";
+
+            int width = 0, height = 0;
+            glfwGetFramebufferSize(Internal::gWindow->getWindowHandle(), &width, &height);
+            
+            while (width == 0 || height == 0)
+            {
+                glfwWaitEvents();
+                glfwGetFramebufferSize(Internal::gWindow->getWindowHandle(), &width, &height);
+            }
+
+            vkDeviceWaitIdle(device.getDevice());
+
+            framebuffers.cleanup(device.getDevice());
+            swapchain.cleanup(device.getDevice());
+
+            swapchain.init(device, context, *Internal::gWindow); 
+            framebuffers.init(device, swapchain, renderPass.getRenderPass());
+
+            renderer.onSwapchainRecreated();
+
+            if (Internal::gCamera)
+                Internal::gCamera->onResize(width, height);
+
+            Internal::gWindow->framebufferResized = false;
+        }
+
         renderer.beginFrame();
+
         Internal::UpdateInput();
     }
 

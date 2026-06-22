@@ -27,10 +27,12 @@ public:
 
     void cleanup(VkDevice device);
 
+    void onSwapchainRecreated();
+
     void setCamera(rc::Camera& c);
     void setClearValues(float r, float g, float b);
 
-    uint32_t beginFrame();
+    void beginFrame();
     void endFrame();
 
     void draw(rc::RenderItem& item);
