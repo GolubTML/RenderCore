@@ -13,9 +13,9 @@
 
 #include "RenderCore/rcGeometry.hpp"
 
-#include <filesystem>
-#include <iostream>
+#include "engine/materials/materialSystem.hpp"
 
+#include <filesystem>
 
 namespace rc::Internal
 {
@@ -37,6 +37,8 @@ namespace rc
     VulkanCommandBuffer commandBuffer;
     VulkanRenderer renderer;
 
+    MaterialSystem materialSystem;
+
     void Init()
     {
         glfwInit();
@@ -49,11 +51,16 @@ namespace rc
         context.init(window);
         device.init(context);
         swapchain.init(device, context, window);
+
+        commandBuffer.init(device);
+        
         renderPass.init(device, swapchain);
-        pipeline.init(device.getDevice());
+        
+        materialSystem.init(device, commandBuffer);
+
+        pipeline.init(device.getDevice(), materialSystem.getMaterialLayout());
 
         framebuffers.init(device, swapchain, renderPass.getRenderPass());
-        commandBuffer.init(device);
         renderer.init(device, swapchain, framebuffers, renderPass, pipeline, commandBuffer);
     }
 
@@ -74,6 +81,8 @@ namespace rc
 
     void Terminate()
     {
+        materialSystem.cleanup(device.getDevice());
+
         renderer.cleanup(device.getDevice());
         commandBuffer.cleanup(device.getDevice());
         framebuffers.cleanup(device.getDevice());
@@ -99,8 +108,6 @@ namespace rc
 
         if (needResize)
         {
-            std::cout << "Result: " << needResize << "\n";
-
             int width = 0, height = 0;
             glfwGetFramebufferSize(Internal::gWindow->getWindowHandle(), &width, &height);
             
@@ -141,25 +148,25 @@ namespace rc
         renderer.draw(item);
     }
 
-
-    void DestroyObject(RenderItem& item)
+    RenderItem CreateRectangle(const glm::vec2& position, float w, float h, Material* material)
     {
-        item.mesh.cleanup(device.getDevice());
-    }
-
-    RenderItem CreateRectangle(const glm::vec2& position, float w, float h, const Color& color)
-    {
-        auto data = Geometry::CreateRectangleData(w, h, color);
+        auto data = Geometry::CreateRectangleData(w, h, material->color);
 
         RenderItem item 
         {
             .mesh = Mesh{},
-            .transform = {glm::vec3(position.x, position.y, 0.f), glm::vec3{0.f}, glm::vec3{1.f}}
+            .transform = {glm::vec3(position.x, position.y, 0.f), glm::vec3{0.f}, glm::vec3{1.f}},
+            .material = material
         };
 
         item.mesh.create(device, data.first, data.second);
 
         return item;
+    }
+
+    void DestroyObject(RenderItem& item)
+    {
+        item.mesh.cleanup(device.getDevice());
     }
 
     Shader LoadShader(const std::string& path, ShaderType type)
@@ -178,5 +185,31 @@ namespace rc
             default:
                 throw std::invalid_argument("Unsupported shader type!");
         }
+    }
+
+    Material* CreateMaterial(Color color, Texture2D& texture)
+    {
+        return materialSystem.createMaterial(&texture, color);
+    }
+
+    Material* CreateMaterial(Color color)
+    {
+        return materialSystem.createMaterial(nullptr, color);
+    }
+
+    void DestroyMaterial(Material* material)
+    {
+        materialSystem.destroyMaterial(material);
+    }
+
+    Texture2D LoadTexture(const std::string& path)
+    {
+        std::filesystem::path exeDir = std::filesystem::canonical("/proc/self/exe").parent_path();
+        std::filesystem::path fullPath = exeDir / path;
+
+        Texture2D tex;
+        tex.create(device, commandBuffer, fullPath);
+
+        return tex;
     }
 }

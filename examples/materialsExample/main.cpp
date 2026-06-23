@@ -1,18 +1,6 @@
 #include <RenderCore/RenderCore.hpp>
 #include <iostream>
 
-void input(glm::vec3& pos, float dt)
-{
-    // we will be using methods from rc::Input
-    // and rc::Key too
-    float speed = 60.f;
-
-    if (rc::Input::IsKeyPressed(rc::Key::W)) pos.y -= speed * dt;
-    if (rc::Input::IsKeyPressed(rc::Key::S)) pos.y += speed * dt;
-    if (rc::Input::IsKeyPressed(rc::Key::A)) pos.x -= speed * dt;
-    if (rc::Input::IsKeyPressed(rc::Key::D)) pos.x += speed * dt;
-}
-
 int main()
 {
     // GLFW init here
@@ -22,8 +10,8 @@ int main()
     {
         .width = 800,
         .height = 600,
-        .title = "Input Example",
-        .resizable = true // Yeah, RESIZEBLE WINDOW!!!
+        .title = "Material Example",
+        .resizable = false // we dont need this here 
     };
 
     rc::Window window(description);
@@ -37,27 +25,37 @@ int main()
     rc::Camera2D camera(description.width, description.height);
     rc::SetCamera(camera);
 
-    glm::vec2 pos = {400.f, 300.f};
+    // And now we can use Materials!
+    // Let's load the texture
+    rc::Texture2D texture = rc::LoadTexture("assets/dirt.png"); 
+    // And create the material
+    rc::Material* material = rc::CreateMaterial({255, 255, 255}, texture);
+    rc::Material* defaultMaterial = rc::CreateMaterial({255, 120, 255, 255});
 
-    auto rectangle = rc::CreateRectangle(pos, 40.f, 40.f, { 255, 0, 0, 0 });
+    auto rectangle = rc::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
+    auto rectangle2 = rc::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
 
     while (!window.ShouldClose())
     {
         window.PollEvents();
         float dt = rc::Time::GetDeltaTime();
 
-        rc::ClearColor(0.2f, 0.2f, 0.2f);
-
-        input(rectangle.transform.position, dt);
+        rc::ClearColor(0.01f, 0.01f, 0.01f);
 
         rc::BeginFrame();
 
             rc::DrawObject(rectangle);
+            rc::DrawObject(rectangle2);
 
         rc::EndFrame();
     }
 
     rc::DestroyObject(rectangle);
+    rc::DestroyObject(rectangle2);
+
+    // We need also destroy the material
+    rc::DestroyMaterial(material);
+    rc::DestroyMaterial(defaultMaterial);
 
     window.Terminate();
 

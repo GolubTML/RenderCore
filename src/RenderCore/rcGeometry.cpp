@@ -10,10 +10,10 @@ namespace rc::Geometry
 
         std::vector<Vertex> vertices =
         {
-            { {-w / 2, -h / 2, 0}, {r, g, b} },
-            { { w / 2, -h / 2, 0}, {r, g, b} },
-            { { w / 2,  h / 2, 0}, {r, g, b} },
-            { {-w / 2,  h / 2, 0}, {r, g, b} }
+            { {-w / 2, -h / 2, 0}, {r, g, b}, {0.f, 0.f} },
+            { { w / 2, -h / 2, 0}, {r, g, b}, {1.f, 0.f} },
+            { { w / 2,  h / 2, 0}, {r, g, b}, {1.f, 1.f} },
+            { {-w / 2,  h / 2, 0}, {r, g, b}, {0.f, 1.f} }
         };
 
         std::vector<uint32_t> indices =

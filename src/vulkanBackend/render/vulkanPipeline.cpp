@@ -4,7 +4,7 @@
 #include "engine/vertex.hpp"
 #include <glm/glm.hpp>
 
-void VulkanPipeline::init(VkDevice device)
+void VulkanPipeline::init(VkDevice device, VkDescriptorSetLayout materialSetLayout)
 {
     createDescriptorSetLayout(device);
 
@@ -14,11 +14,13 @@ void VulkanPipeline::init(VkDevice device)
     pushConstantRange.offset = 0;
     pushConstantRange.size = sizeof(glm::mat4);
 
+    std::array<VkDescriptorSetLayout, 2> layouts = {descriptorSetLayout, materialSetLayout};
+
     // Creating pipeline layout
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.setLayoutCount = 1; // 1, because we will cast description layout
-    pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout; // and now, we need to set descriptor layout here 
+    pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(layouts.size()); // 1, because we will cast description layout
+    pipelineLayoutInfo.pSetLayouts = layouts.data(); // and now, we need to set descriptor layout here 
     pipelineLayoutInfo.pushConstantRangeCount = 1; // because we push only model matrix 
     pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange; 
 
@@ -80,25 +82,15 @@ void VulkanPipeline::createDescriptorSetLayout(VkDevice device)
     uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     uboLayoutBinding.pImmutableSamplers = nullptr; 
 
-    VkDescriptorSetLayoutBinding samplerLayoutBinding{};
-    samplerLayoutBinding.binding = 1;
-    samplerLayoutBinding.descriptorCount = 1;
-    samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-    samplerLayoutBinding.pImmutableSamplers = nullptr; 
-
-    // FOR TEST - 1
-    std::array<VkDescriptorSetLayoutBinding, 1> bindings = {uboLayoutBinding};
+    VkDescriptorSetLayoutBinding binding = uboLayoutBinding;
 
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
-    layoutInfo.pBindings = bindings.data();
+    layoutInfo.bindingCount = 1;
+    layoutInfo.pBindings = &binding;
 
     if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
-    {
         throw std::runtime_error("Cannot create description set layout!");
-    }
 }
 
 VkPipeline VulkanPipeline::createPipeline(const VulkanSwapchain& swapchain, 

@@ -2,12 +2,15 @@
 
 #include "engine/mesh.hpp"
 #include "engine/transform.hpp"
+#include "engine/materials/material.hpp"
 
 namespace rc
 {
     struct RenderItem
     {
-        rc::Mesh mesh;
-        rc::Transform transform;
+        Mesh mesh;
+        Transform transform;
+
+        Material* material = nullptr;
     };
 }

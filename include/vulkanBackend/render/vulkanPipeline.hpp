@@ -10,7 +10,7 @@ class VulkanSwapchain;
 class VulkanPipeline
 {
 public:
-    void init(VkDevice device);
+    void init(VkDevice device, VkDescriptorSetLayout materialSetLayout);
     void build(const VulkanSwapchain& swapchain, VkDevice device, VkRenderPass renderPass); // for graphics pipeline. Can be a bad idea
 
     void cleanup(VkDevice device);

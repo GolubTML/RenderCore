@@ -10,4 +10,5 @@ find_package(glm REQUIRED)
 
 add_subdirectory(src/)
 # add_subdirectory(examples/test/)
-add_subdirectory(examples/inputExample/)
+# add_subdirectory(examples/inputExample/)
+add_subdirectory(examples/materialsExample/)

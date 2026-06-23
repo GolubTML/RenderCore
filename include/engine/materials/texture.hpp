@@ -15,10 +15,12 @@ namespace rc
         ~Texture2D() = default;
 
         void create(const VulkanDevice& vDevice, const VulkanCommandBuffer& cmd, const std::string& path);
-        void cleanup(const VulkanDevice& vDevice);
+        void cleanup(VkDevice device);
 
-        VkImageView& getImageView() const;
-        VkSampler& getSampler() const;
+        void createWhitePixel(const VulkanDevice& vDevice, const VulkanCommandBuffer& cmd);
+
+        const VkImageView& getImageView() const;
+        const VkSampler& getSampler() const;
 
     private:
         uint32_t mipLevels = 1;

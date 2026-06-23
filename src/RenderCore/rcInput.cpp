@@ -64,6 +64,8 @@ namespace rc
             case Key::Return: return GLFW_KEY_ENTER;
             case Key::Backspace: return GLFW_KEY_BACKSPACE;
         }
+
+        return 0;
     }
 
     namespace Input

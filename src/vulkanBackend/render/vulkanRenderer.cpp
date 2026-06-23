@@ -180,13 +180,6 @@ void VulkanRenderer::endFrame()
     vkQueuePresentKHR(vDevice->getPresentQueue(), &presentInfo);
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-    
-    // if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
-    //     return true;
-    // else if(result != VK_SUCCESS)
-    //     throw std::runtime_error("Failed to present frame!");
-
-    // return false;
 }
 
 void VulkanRenderer::draw(rc::RenderItem& item)
@@ -195,7 +188,13 @@ void VulkanRenderer::draw(rc::RenderItem& item)
 
     vkCmdBindPipeline(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getGraphicsPipeline());
 
-    vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getPipelineLayout(), 0, 1, &descriptorSets[currentFrame], 0, nullptr);
+    vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, 
+        pipeline->getPipelineLayout(), 0, 1, &descriptorSets[currentFrame], 0, nullptr);
+
+    VkDescriptorSet matSet = item.material->descriptorSet;
+        
+    vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, 
+        pipeline->getPipelineLayout(), 1, 1, &matSet, 0, nullptr);
 
     glm::mat4 model = item.transform.getModelMatrix();
     vkCmdPushConstants(cmdBuf, pipeline->getPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);

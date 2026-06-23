@@ -2,7 +2,7 @@
 #include <lib/stb_image.h>
 #include <stdexcept>
 
-#include "engine/texture.hpp"
+#include "engine/materials/texture.hpp"
 #include "vulkanBackend/vulkanBuffer.hpp"
 #include "vulkanBackend/vulkanDevice.hpp"
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
@@ -86,13 +86,64 @@ namespace rc
         createSampler(vDevice);
     }
 
-    void Texture2D::cleanup(const VulkanDevice& vDevice)
+    void Texture2D::cleanup(VkDevice device)
     {
-        vkDestroySampler(vDevice.getDevice(), sampler, nullptr);
-        vkDestroyImageView(vDevice.getDevice(), imageView, nullptr);
+        vkDestroySampler(device, sampler, nullptr);
+        vkDestroyImageView(device, imageView, nullptr);
         
-        vkDestroyImage(vDevice.getDevice(), image, nullptr);
-        vkFreeMemory(vDevice.getDevice(), imageMemory, nullptr);
+        vkDestroyImage(device, image, nullptr);
+        vkFreeMemory(device, imageMemory, nullptr);
+    }
+
+    void Texture2D::createWhitePixel(const VulkanDevice& vDevice, const VulkanCommandBuffer& cmd)
+    {
+        this->mipLevels = 1;
+
+        uint32_t imagePixel = 0xFFFFFFFF;
+        VkDeviceSize imageSize = sizeof(imagePixel);
+
+        VulkanBuffer stagingBuffer;
+        stagingBuffer.create(vDevice, imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, nullptr);
+
+        void* data;
+        vkMapMemory(vDevice.getDevice(), stagingBuffer.memory, 0, imageSize, 0, &data);
+        memcpy(data, &imagePixel, imageSize);
+        vkUnmapMemory(vDevice.getDevice(), stagingBuffer.memory);
+
+        createImage(vDevice, 1, 1, 
+            VK_FORMAT_R8G8B8A8_UNORM, 
+            VK_IMAGE_TILING_OPTIMAL,
+            VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+        transitionImageLayout(vDevice, cmd, image,
+            VK_FORMAT_R8G8B8A8_UNORM, 
+            VK_IMAGE_LAYOUT_UNDEFINED, 
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
+
+        copyBufferToImage(vDevice, cmd, stagingBuffer.buffer, image, 1, 1);
+
+        transitionImageLayout(vDevice, cmd, image,
+            VK_FORMAT_R8G8B8A8_UNORM, 
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 
+            VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, mipLevels);
+
+        stagingBuffer.cleanup(vDevice.getDevice());
+
+        this->imageView = vkUtils::createImageView(vDevice.getDevice(), image, 
+            VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+        
+        createSampler(vDevice);
+    }
+
+    const VkImageView& Texture2D::getImageView() const
+    {   
+        return imageView;
+    }   
+
+    const VkSampler& Texture2D::getSampler() const
+    {
+        return sampler;
     }
 
     void Texture2D::createImage(const VulkanDevice& vDevice, uint32_t width, uint32_t height, 
@@ -112,6 +163,7 @@ namespace rc
         imageInfo.usage = usage;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        imageInfo.arrayLayers = 1;
 
         if (vkCreateImage(vDevice.getDevice(), &imageInfo, nullptr, &image) != VK_SUCCESS)
             throw std::runtime_error("Cannot create image for texture!");
