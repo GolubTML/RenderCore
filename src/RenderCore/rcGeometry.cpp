@@ -4,16 +4,17 @@ namespace rc::Geometry
 {
     std::pair<std::vector<Vertex>, std::vector<uint32_t>> CreateRectangleData(float w, float h, const Color& color)
     {
-        float r = static_cast<float>(color.r / 255);
-        float g = static_cast<float>(color.g / 255);
-        float b = static_cast<float>(color.b / 255);
+        float r = static_cast<float>(color.r) / 255.f;
+        float g = static_cast<float>(color.g) / 255.f;
+        float b = static_cast<float>(color.b) / 255.f;
+        float a = static_cast<float>(color.a) / 255.f;
 
         std::vector<Vertex> vertices =
         {
-            { {-w / 2, -h / 2, 0}, {r, g, b}, {0.f, 0.f} },
-            { { w / 2, -h / 2, 0}, {r, g, b}, {1.f, 0.f} },
-            { { w / 2,  h / 2, 0}, {r, g, b}, {1.f, 1.f} },
-            { {-w / 2,  h / 2, 0}, {r, g, b}, {0.f, 1.f} }
+            { {-w / 2, -h / 2, 0}, {r, g, b, a}, {0.f, 0.f} },
+            { { w / 2, -h / 2, 0}, {r, g, b, a}, {1.f, 0.f} },
+            { { w / 2,  h / 2, 0}, {r, g, b, a}, {1.f, 1.f} },
+            { {-w / 2,  h / 2, 0}, {r, g, b, a}, {0.f, 1.f} }
         };
 
         std::vector<uint32_t> indices =

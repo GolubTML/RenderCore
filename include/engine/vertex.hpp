@@ -6,7 +6,7 @@
 struct Vertex
 {
     glm::vec3 pos;
-    glm::vec3 color;
+    glm::vec4 color;
     glm::vec2 uvPos;
 
     static VkVertexInputBindingDescription getBindingDescription();

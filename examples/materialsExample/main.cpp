@@ -30,7 +30,7 @@ int main()
     rc::Texture2D texture = rc::LoadTexture("assets/dirt.png"); 
     // And create the material
     rc::Material* material = rc::CreateMaterial({255, 255, 255}, texture);
-    rc::Material* defaultMaterial = rc::CreateMaterial({255, 120, 255, 255});
+    rc::Material* defaultMaterial = rc::CreateMaterial({60, 255, 255});
 
     auto rectangle = rc::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
     auto rectangle2 = rc::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
