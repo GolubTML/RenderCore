@@ -48,4 +48,7 @@ namespace rc
         void generateMipmaps(const VulkanDevice& vDevice, const VulkanCommandBuffer& cmd, VkImage image,  VkFormat imageFormat,
             int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
     };
-};
+
+
+    Texture2D LoadTexture(const std::string& path);
+}

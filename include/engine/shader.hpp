@@ -28,4 +28,7 @@ namespace rc
 
         std::vector<char> readFile(const std::string& path);
     };
+
+    // Now, loading method for engine classes will here
+    Shader LoadShader(const std::string& path, ShaderType type);
 }

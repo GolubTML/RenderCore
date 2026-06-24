@@ -1,12 +1,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <lib/stb_image.h>
 #include <stdexcept>
+#include <filesystem>
 
 #include "engine/materials/texture.hpp"
 #include "vulkanBackend/vulkanBuffer.hpp"
 #include "vulkanBackend/vulkanDevice.hpp"
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/utils.hpp"
+
+#include "RenderCore/rcInternal.hpp"
 
 // helper functions will declarete here
 VkCommandBuffer beginSingleTimeCommands(const VulkanDevice& vDevice, const VulkanCommandBuffer& cmd) 
@@ -402,5 +405,17 @@ namespace rc
             1, &barrier);
 
         endSingleTimeCommands(commandBuffer, vDevice, cmd);
+    }
+
+
+    Texture2D LoadTexture(const std::string& path)
+    {
+        std::filesystem::path exeDir = std::filesystem::canonical("/proc/self/exe").parent_path();
+        std::filesystem::path fullPath = exeDir / path;
+
+        Texture2D tex;
+        tex.create(*Internal::gVulkDevice, *Internal::gCmd, fullPath);
+
+        return tex;
     }
 }

@@ -22,4 +22,12 @@ namespace rc
         friend class ::MaterialSystem;
         friend class ::VulkanRenderer;
     };
+
+    // overloads for this function
+    // if has texture, we will use it
+    Material* CreateMaterial(Color color, Texture2D& texture); 
+    // if there is no texture, we will use 1 by 1 white texture
+    Material* CreateMaterial(Color color);         
+                
+    void DestroyMaterial(Material* material);
 }

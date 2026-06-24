@@ -11,8 +11,6 @@
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/render/vulkanRenderer.hpp"  
 
-#include "RenderCore/rcGeometry.hpp"
-
 #include "engine/materials/materialSystem.hpp"
 
 #include <filesystem>
@@ -21,6 +19,9 @@ namespace rc::Internal
 {
     Window* gWindow = nullptr;
     Camera* gCamera = nullptr;
+    VulkanDevice* gVulkDevice = nullptr;
+    VulkanCommandBuffer* gCmd = nullptr;
+    MaterialSystem* gMaterialSystem = nullptr;
 
     bool currentKeys[GLFW_KEY_LAST] = {};
     bool previousKeys[GLFW_KEY_LAST] = {};
@@ -50,13 +51,18 @@ namespace rc
 
         context.init(window);
         device.init(context);
+
+        Internal::gVulkDevice = &device;
+
         swapchain.init(device, context, window);
 
         commandBuffer.init(device);
+        Internal::gCmd = &commandBuffer;
         
         renderPass.init(device, swapchain);
         
         materialSystem.init(device, commandBuffer);
+        Internal::gMaterialSystem = &materialSystem;
 
         pipeline.init(device.getDevice(), materialSystem.getMaterialLayout());
 
@@ -146,70 +152,5 @@ namespace rc
     void DrawObject(RenderItem& item)
     {
         renderer.draw(item);
-    }
-
-    RenderItem CreateRectangle(const glm::vec2& position, float w, float h, Material* material)
-    {
-        auto data = Geometry::CreateRectangleData(w, h, material->color);
-
-        RenderItem item 
-        {
-            .mesh = Mesh{},
-            .transform = {glm::vec3(position.x, position.y, 0.f), glm::vec3{0.f}, glm::vec3{1.f}},
-            .material = material
-        };
-
-        item.mesh.create(device, data.first, data.second);
-
-        return item;
-    }
-
-    void DestroyObject(RenderItem& item)
-    {
-        item.mesh.cleanup(device.getDevice());
-    }
-
-    Shader LoadShader(const std::string& path, ShaderType type)
-    {
-        std::filesystem::path exeDir = std::filesystem::canonical("/proc/self/exe").parent_path();
-        std::filesystem::path fullPath = exeDir / path;
-
-        switch (type)
-        {
-            case ShaderType::VERTEX:
-                return Shader(fullPath.string(), device.getDevice(), VK_SHADER_STAGE_VERTEX_BIT);
-
-            case ShaderType::FRAGMENT:
-                return Shader(fullPath.string(), device.getDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
-
-            default:
-                throw std::invalid_argument("Unsupported shader type!");
-        }
-    }
-
-    Material* CreateMaterial(Color color, Texture2D& texture)
-    {
-        return materialSystem.createMaterial(&texture, color);
-    }
-
-    Material* CreateMaterial(Color color)
-    {
-        return materialSystem.createMaterial(nullptr, color);
-    }
-
-    void DestroyMaterial(Material* material)
-    {
-        materialSystem.destroyMaterial(material);
-    }
-
-    Texture2D LoadTexture(const std::string& path)
-    {
-        std::filesystem::path exeDir = std::filesystem::canonical("/proc/self/exe").parent_path();
-        std::filesystem::path fullPath = exeDir / path;
-
-        Texture2D tex;
-        tex.create(device, commandBuffer, fullPath);
-
-        return tex;
     }
 }

@@ -32,8 +32,8 @@ int main()
     rc::Material* material = rc::CreateMaterial({255, 255, 255}, texture);
     rc::Material* defaultMaterial = rc::CreateMaterial({60, 255, 255});
 
-    auto rectangle = rc::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
-    auto rectangle2 = rc::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
+    auto rectangle = rc::Shapes::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
+    auto rectangle2 = rc::Shapes::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
 
     while (!window.ShouldClose())
     {
@@ -50,8 +50,8 @@ int main()
         rc::EndFrame();
     }
 
-    rc::DestroyObject(rectangle);
-    rc::DestroyObject(rectangle2);
+    rc::Shapes::DestroyObject(rectangle);
+    rc::Shapes::DestroyObject(rectangle2);
 
     // We need also destroy the material
     rc::DestroyMaterial(material);

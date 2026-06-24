@@ -4,6 +4,9 @@
 #include <fstream>
 #include <filesystem>
 
+#include "vulkanBackend/vulkanDevice.hpp"
+#include "RenderCore/rcInternal.hpp"
+
 namespace rc
 {
     Shader::Shader(const std::string& path, VkDevice device, VkShaderStageFlagBits shaderFlag)
@@ -68,5 +71,23 @@ namespace rc
         file.close();
     
         return buffer;
+    }
+
+    Shader LoadShader(const std::string& path, ShaderType type)
+    {
+        std::filesystem::path exeDir = std::filesystem::canonical("/proc/self/exe").parent_path();
+        std::filesystem::path fullPath = exeDir / path;
+
+        switch (type)
+        {
+            case ShaderType::VERTEX:
+                return Shader(fullPath.string(), Internal::gVulkDevice->getDevice(), VK_SHADER_STAGE_VERTEX_BIT);
+
+            case ShaderType::FRAGMENT:
+                return Shader(fullPath.string(), Internal::gVulkDevice->getDevice(), VK_SHADER_STAGE_FRAGMENT_BIT);
+
+            default:
+                throw std::invalid_argument("Unsupported shader type!");
+        }
     }
 }
