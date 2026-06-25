@@ -1,7 +1,7 @@
 #include "RenderCore/rcInput.hpp"
 #include "RenderCore/rcInternal.hpp"
 
-#include "engine/window.hpp"
+#include "RenderCore/core/rcWindow.hpp"
 
 namespace rc
 {

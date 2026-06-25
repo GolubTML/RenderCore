@@ -2,7 +2,6 @@
 
 #include <vulkan/vulkan.hpp>
 #include <vector>
-#include "engine/window.hpp"
 
 struct SwapChainSupportDetails
 {
@@ -13,6 +12,11 @@ struct SwapChainSupportDetails
 };
 
 SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface);
+
+namespace rc
+{
+    class Window;
+}
 
 class VulkanContext;
 class VulkanDevice;

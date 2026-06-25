@@ -1,17 +1,17 @@
 #pragma once
 
-#include "engine/window.hpp"
-#include "engine/camera/camera2D.hpp"
-#include "engine/camera/camera3D.hpp"
-#include "engine/renderItem.hpp"
-#include "engine/shader.hpp"
-#include "engine/materials/material.hpp"
-#include "engine/materials/texture.hpp"
+#include "RenderCore/core/rcWindow.hpp"
+#include "RenderCore/core/rcRenderItem.hpp"
+#include "RenderCore/core/rcShader.hpp"
+#include "RenderCore/core/camera/camera2D.hpp"
+#include "RenderCore/core/camera/camera3D.hpp"
+#include "RenderCore/core/rcMaterial.hpp"
 
 #include "RenderCore/rcTypes.hpp"
 #include "RenderCore/rcTime.hpp"
 #include "RenderCore/rcInput.hpp"
 #include "RenderCore/rcShapes.hpp"
+#include "RenderCore/rcTexture2D.hpp"
 
 namespace rc
 {
@@ -19,7 +19,7 @@ namespace rc
     void InitVulkan(Window& window);
 
     void SetCamera(rc::Camera& camera);
-    void SetShaders(Shader vertex, Shader fragment);
+    void SetShaders(const Shader& vertex, const Shader& fragment);
 
     void Terminate();
 

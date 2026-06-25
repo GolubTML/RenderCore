@@ -3,6 +3,8 @@
 #include "vulkanBackend/vulkanDevice.hpp"
 #include "vulkanBackend/utils.hpp"
 
+#include "RenderCore/core/rcWindow.hpp"
+
 SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface)
 {
     SwapChainSupportDetails details;

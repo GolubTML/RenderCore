@@ -1,4 +1,5 @@
 #include "vulkanBackend/vulkanContext.hpp"
+#include "RenderCore/core/rcWindow.hpp"
 #include <stdexcept>
 
 const std::vector<const char*> validationLayers = {

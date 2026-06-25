@@ -14,6 +14,7 @@
 #include "engine/materials/materialSystem.hpp"
 
 #include <filesystem>
+#include <iostream>
 
 namespace rc::Internal
 {
@@ -77,16 +78,18 @@ namespace rc
         Internal::gCamera = &camera;
     }
 
-    void SetShaders(Shader vertex, Shader fragment)
+    void SetShaders(const Shader& vertex, const Shader& fragment)
     {   
-        pipeline.setVertexShader(std::move(vertex));
-        pipeline.setFragmentShader(std::move(fragment));
+        pipeline.setVertexShader(vertex);
+        pipeline.setFragmentShader(fragment);
 
         pipeline.build(swapchain, device.getDevice(), renderPass.getRenderPass());
     }
 
     void Terminate()
     {
+        std::cout << "Clean up all systems.." << "\n";
+
         materialSystem.cleanup(device.getDevice());
 
         renderer.cleanup(device.getDevice());

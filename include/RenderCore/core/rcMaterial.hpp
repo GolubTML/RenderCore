@@ -1,7 +1,6 @@
 #pragma once
 
 #include <RenderCore/rcTypes.hpp>
-#include <vulkan/vulkan.hpp>
 
 class MaterialSystem;
 class VulkanRenderer;
@@ -17,7 +16,7 @@ namespace rc
         Texture2D* texture = nullptr;
 
     private:
-        VkDescriptorSet descriptorSet = VK_NULL_HANDLE;
+        uintptr_t handle = 0; // i REALLY don't know where to make it
 
         friend class ::MaterialSystem;
         friend class ::VulkanRenderer;

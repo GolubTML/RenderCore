@@ -1,9 +1,11 @@
 #include "RenderCore/rcShapes.hpp"
-#include "engine/materials/material.hpp"
-#include <utility>
+#include "RenderCore/core/rcMaterial.hpp"
 
 #include "RenderCore/rcInternal.hpp"
 #include "vulkanBackend/vulkanDevice.hpp"
+#include "engine/mesh.hpp"
+
+#include <utility>
 
 namespace rc::Shapes
 {
@@ -15,19 +17,19 @@ namespace rc::Shapes
 
         RenderItem item 
         {
-            .mesh = Mesh{},
+            .mesh = new Mesh(),
             .transform = {glm::vec3(position.x, position.y, 0.f), glm::vec3{0.f}, glm::vec3{1.f}},
             .material = material
         };
 
-        item.mesh.create(*Internal::gVulkDevice, data.first, data.second);
+        item.mesh->create(*Internal::gVulkDevice, data.first, data.second);
 
         return item;
     }
 
     void DestroyObject(RenderItem& item)
     {
-        item.mesh.cleanup(Internal::gVulkDevice->getDevice());
+        item.mesh->cleanup(Internal::gVulkDevice->getDevice());
     }
 
 

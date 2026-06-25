@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/renderItem.hpp"
+#include "RenderCore/core/rcRenderItem.hpp"
 #include "RenderCore/rcTypes.hpp"
 
 #include <vector>

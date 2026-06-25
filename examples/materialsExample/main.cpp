@@ -17,8 +17,8 @@ int main()
     rc::Window window(description);
     rc::InitVulkan(window);
 
-    rc::Shader vertex = rc::LoadShader("shaders/default_vert.spv", rc::ShaderType::VERTEX);
-    rc::Shader fragment = rc::LoadShader("shaders/default_frag.spv", rc::ShaderType::FRAGMENT);
+    rc::Shader vertex("shaders/default_vert.spv", rc::ShaderType::VERTEX);
+    rc::Shader fragment("shaders/default_frag.spv", rc::ShaderType::FRAGMENT);
 
     rc::SetShaders(vertex, fragment);
 
@@ -27,35 +27,41 @@ int main()
 
     // And now we can use Materials!
     // Let's load the texture
-    rc::Texture2D texture = rc::LoadTexture("assets/dirt.png"); 
-    // And create the material
-    rc::Material* material = rc::CreateMaterial({255, 255, 255}, texture);
-    rc::Material* defaultMaterial = rc::CreateMaterial({60, 255, 255});
-
-    auto rectangle = rc::Shapes::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
-    auto rectangle2 = rc::Shapes::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
-
-    while (!window.ShouldClose())
     {
-        window.PollEvents();
-        float dt = rc::Time::GetDeltaTime();
+        rc::Texture2D texture("assets/dirt.png");
+        
+        // And create the material
+        rc::Material* material = rc::CreateMaterial({255, 255, 255}, texture);
+        rc::Material* defaultMaterial = rc::CreateMaterial({60, 255, 255});
 
-        rc::ClearColor(0.01f, 0.01f, 0.01f);
+        auto rectangle = rc::Shapes::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
+        auto rectangle2 = rc::Shapes::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
 
-        rc::BeginFrame();
+        while (!window.ShouldClose())
+        {
+            window.PollEvents();
+            float dt = rc::Time::GetDeltaTime();
 
-            rc::DrawObject(rectangle);
-            rc::DrawObject(rectangle2);
+            rc::ClearColor(0.01f, 0.01f, 0.01f);
 
-        rc::EndFrame();
-    }
+            rc::BeginFrame();
 
-    rc::Shapes::DestroyObject(rectangle);
-    rc::Shapes::DestroyObject(rectangle2);
+                rc::DrawObject(rectangle);
+                rc::DrawObject(rectangle2);
 
-    // We need also destroy the material
-    rc::DestroyMaterial(material);
-    rc::DestroyMaterial(defaultMaterial);
+            rc::EndFrame();
+        }
+
+        rc::Shapes::DestroyObject(rectangle);
+        rc::Shapes::DestroyObject(rectangle2);
+
+        // We need also destroy the material
+        rc::DestroyMaterial(material);
+        rc::DestroyMaterial(defaultMaterial);
+    }   
+
+    vertex.Destroy();
+    fragment.Destroy();
 
     window.Terminate();
 

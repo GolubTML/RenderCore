@@ -6,8 +6,11 @@
 #include "vulkanBackend/render/vulkanRenderPass.hpp"
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/types.hpp"
-#include "engine/camera/camera.hpp"
-#include "engine/renderItem.hpp"
+
+#include "RenderCore/core/camera/camera.hpp"
+#include "RenderCore/core/rcRenderItem.hpp"
+#include "engine/mesh.hpp"
+#include "RenderCore/core/rcMaterial.hpp"
 
 void VulkanRenderer::init(VulkanDevice& device, 
         VulkanSwapchain& Swapchain,
@@ -191,7 +194,7 @@ void VulkanRenderer::draw(rc::RenderItem& item)
     vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, 
         pipeline->getPipelineLayout(), 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 
-    VkDescriptorSet matSet = item.material->descriptorSet;
+    VkDescriptorSet matSet = reinterpret_cast<VkDescriptorSet>(item.material->handle);
         
     vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, 
         pipeline->getPipelineLayout(), 1, 1, &matSet, 0, nullptr);
@@ -199,7 +202,7 @@ void VulkanRenderer::draw(rc::RenderItem& item)
     glm::mat4 model = item.transform.getModelMatrix();
     vkCmdPushConstants(cmdBuf, pipeline->getPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
 
-    item.mesh.draw(*cmd, currentFrame);
+    item.mesh->draw(*cmd, currentFrame);
 }
 
 void VulkanRenderer::createDescriptorPool()

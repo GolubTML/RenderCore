@@ -1,4 +1,5 @@
-#include "engine/window.hpp"
+#include "RenderCore/core/rcWindow.hpp"
+#include "RenderCore/rcTypes.hpp"
 
 namespace rc
 {

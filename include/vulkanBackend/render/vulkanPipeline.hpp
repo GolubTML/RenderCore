@@ -3,9 +3,14 @@
 #include <vulkan/vulkan.hpp>
 #include <optional>
 
-#include "engine/shader.hpp"
+#include "vulkanBackend/vulkanShader.hpp"
 
 class VulkanSwapchain;
+
+namespace rc
+{
+    class Shader;
+}
 
 class VulkanPipeline
 {
@@ -19,16 +24,19 @@ public:
         VkDevice device, VkRenderPass renderPass,
         VkPrimitiveTopology topology, VkPolygonMode polygonMode);
 
-    void setVertexShader(rc::Shader vertex);
-    void setFragmentShader(rc::Shader frag);
+    void setVertexShader(const rc::Shader& vertex);
+    void setFragmentShader(const rc::Shader& frag);
 
     const VkDescriptorSetLayout& getDescriptorSetLayout() const;
     VkPipeline& getGraphicsPipeline();
     const VkPipelineLayout& getPipelineLayout() const;
 
 private:
-    std::optional<rc::Shader> vertexShader;
-    std::optional<rc::Shader> fragmentShader;
+    VkPipelineShaderStageCreateInfo vertexStage{};
+    VkPipelineShaderStageCreateInfo fragmentStage{};
+
+    bool hasVertex = false;
+    bool hasFragment = false;
 
     VkDescriptorSetLayout descriptorSetLayout;
     VkPipelineLayout pipelineLayout;

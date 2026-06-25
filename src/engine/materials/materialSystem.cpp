@@ -1,13 +1,14 @@
 #include "engine/materials/materialSystem.hpp"
-#include "engine/materials/texture.hpp"
+#include "vulkanBackend/vulkanTexture.hpp"
+#include "RenderCore/rcTexture2D.hpp"
 #include "vulkanBackend/vulkanDevice.hpp"
 
 void MaterialSystem::init(VulkanDevice& vDevice, const VulkanCommandBuffer& cmd)
 {
     this->vDevice = &vDevice;
 
-    this->defaultTex = new rc::Texture2D();
-    this->defaultTex->createWhitePixel(vDevice, cmd); 
+    this->defaultTex = std::make_unique<rc::Texture2D>();
+    this->defaultTex->handle->createWhitePixel(vDevice, cmd); 
 
     createMaterialDescriptorLayout();
     createMaterialDescriptorPool();
@@ -17,7 +18,7 @@ void MaterialSystem::cleanup(VkDevice device)
 {
     vDevice = nullptr;
 
-    defaultTex->cleanup(device);
+    defaultTex.reset();
 
     if (materialPool != VK_NULL_HANDLE) vkDestroyDescriptorPool(device, materialPool, nullptr);
     if (matLayout != VK_NULL_HANDLE) vkDestroyDescriptorSetLayout(device, matLayout, nullptr);
@@ -37,19 +38,23 @@ rc::Material* MaterialSystem::createMaterial(rc::Texture2D* texture, rc::Color c
     allocInfo.descriptorSetCount = 1;
     allocInfo.pSetLayouts = &matLayout;
 
-    if (vkAllocateDescriptorSets(vDevice->getDevice(), &allocInfo, &mat->descriptorSet) != VK_SUCCESS)
+    VkDescriptorSet descriptorSet;
+
+    if (vkAllocateDescriptorSets(vDevice->getDevice(), &allocInfo, &descriptorSet) != VK_SUCCESS)
         throw std::runtime_error("Cannot allocate descriptor set for material!");
 
-    rc::Texture2D* textureToBind = texture ? texture : defaultTex;
+    mat->handle = reinterpret_cast<uintptr_t>(descriptorSet);
+
+    rc::Texture2D* textureToBind = texture ? texture : defaultTex.get();
 
     VkDescriptorImageInfo imageInfo{};
     imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-    imageInfo.imageView = textureToBind->getImageView();
-    imageInfo.sampler = textureToBind->getSampler();
+    imageInfo.imageView = textureToBind->handle->getImageView();
+    imageInfo.sampler = textureToBind->handle->getSampler();
 
     VkWriteDescriptorSet descriptorWrite{};
     descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    descriptorWrite.dstSet = mat->descriptorSet;
+    descriptorWrite.dstSet = reinterpret_cast<VkDescriptorSet>(mat->handle);;
     descriptorWrite.dstBinding = 0;
     descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     descriptorWrite.descriptorCount = 1;
@@ -67,18 +72,18 @@ void MaterialSystem::destroyMaterial(rc::Material* material)
 {
     if (!material) throw std::runtime_error("Invalide material pointer!");
     
-    if (material->descriptorSet != VK_NULL_HANDLE)
-        vkFreeDescriptorSets(vDevice->getDevice(), materialPool, 1, &material->descriptorSet);
+    VkDescriptorSet descriptorSet = reinterpret_cast<VkDescriptorSet>(material->handle);
 
-    if (material->texture && material->texture != defaultTex)
-        material->texture->cleanup(vDevice->getDevice());
+    if (descriptorSet != VK_NULL_HANDLE)
+        vkFreeDescriptorSets(vDevice->getDevice(), materialPool, 1, &descriptorSet);
 
     auto it = std::find_if(allocatedMaterials.begin(), allocatedMaterials.end(),
         [material](const std::unique_ptr<rc::Material>& mat) {
             return mat.get() == material;
         });
 
-    if (it != allocatedMaterials.end()) {
+    if (it != allocatedMaterials.end()) 
+    {
         allocatedMaterials.erase(it);
     }
 }

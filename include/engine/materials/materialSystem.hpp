@@ -1,6 +1,7 @@
 #pragma once
 
-#include "engine/materials/material.hpp"
+#include "RenderCore/core/rcMaterial.hpp"
+#include <vulkan/vulkan.hpp>
 #include <vector>
 #include <memory>
 
@@ -23,7 +24,7 @@ private:
     VkDescriptorSetLayout matLayout = VK_NULL_HANDLE; 
     VkDescriptorPool materialPool = VK_NULL_HANDLE;
 
-    rc::Texture2D* defaultTex = nullptr;
+    std::unique_ptr<rc::Texture2D> defaultTex = nullptr;
     std::vector<std::unique_ptr<rc::Material>> allocatedMaterials;
 
     void createMaterialDescriptorLayout();

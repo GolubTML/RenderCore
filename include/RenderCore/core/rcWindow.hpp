@@ -5,14 +5,7 @@
 
 namespace rc
 {
-    struct WindowDesc
-    {
-        int width;
-        int height;
-        std::string title;
-
-        bool resizable = false;
-    };
+    struct WindowDesc;
 
     class Window
     {

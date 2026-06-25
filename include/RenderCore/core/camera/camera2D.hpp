@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/camera/camera.hpp"
+#include "RenderCore/core/camera/camera.hpp"
 
 namespace rc
 {

@@ -2,8 +2,11 @@
 
 #include <vulkan/vulkan.hpp>
 #include <vector>
-#include "engine/window.hpp"
 
+namespace rc
+{
+    class Window;
+}
 
 class VulkanContext
 {

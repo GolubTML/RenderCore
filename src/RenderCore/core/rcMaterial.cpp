@@ -1,4 +1,4 @@
-#include "engine/materials/material.hpp"
+#include "RenderCore/core/rcMaterial.hpp"
 #include "engine/materials/materialSystem.hpp"
 
 #include "RenderCore/rcInternal.hpp"

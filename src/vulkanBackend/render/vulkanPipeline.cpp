@@ -1,8 +1,9 @@
 #include "vulkanBackend/render/vulkanPipeline.hpp"
 #include "vulkanBackend/vulkanSwapchain.hpp"
-#include "engine/shader.hpp"
 #include "engine/vertex.hpp"
 #include <glm/glm.hpp>
+
+#include "RenderCore/core/rcShader.hpp"
 
 void VulkanPipeline::init(VkDevice device, VkDescriptorSetLayout materialSetLayout)
 {
@@ -32,7 +33,7 @@ void VulkanPipeline::init(VkDevice device, VkDescriptorSetLayout materialSetLayo
 
 void VulkanPipeline::build(const VulkanSwapchain& swapchain, VkDevice device, VkRenderPass renderPass)
 {
-    if (!vertexShader.has_value() || !fragmentShader.has_value())
+    if (!hasVertex || !hasFragment)
         throw std::runtime_error("Shaders must be set before creating pipeline!");
 
     if (graphicsPipeline != VK_NULL_HANDLE)
@@ -50,12 +51,6 @@ void VulkanPipeline::cleanup(VkDevice device)
     vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 
     vkDestroyPipeline(device, graphicsPipeline, nullptr);
-
-    if (vertexShader.has_value())
-        vertexShader->cleanup(device);
-
-    if (fragmentShader.has_value())
-        fragmentShader->cleanup(device);
 }
 
 const VkDescriptorSetLayout& VulkanPipeline::getDescriptorSetLayout() const
@@ -97,7 +92,11 @@ VkPipeline VulkanPipeline::createPipeline(const VulkanSwapchain& swapchain,
         VkDevice device, VkRenderPass renderPass, 
         VkPrimitiveTopology topology, VkPolygonMode polygonMode)
 {
-    VkPipelineShaderStageCreateInfo shaderStages[] = {vertexShader->getStageInfo(), fragmentShader->getStageInfo()};
+    VkPipelineShaderStageCreateInfo shaderStages[] = 
+    {
+        vertexStage, 
+        fragmentStage
+    };
 
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -227,12 +226,14 @@ VkPipeline VulkanPipeline::createPipeline(const VulkanSwapchain& swapchain,
     return result;
 }
 
-void VulkanPipeline::setVertexShader(rc::Shader vertex)
+void VulkanPipeline::setVertexShader(const rc::Shader& vertex)
 {
-    vertexShader = std::move(vertex);
+    vertexStage = vertex.handle->getStageInfo();
+    hasVertex = true;
 }
 
-void VulkanPipeline::setFragmentShader(rc::Shader frag)
+void VulkanPipeline::setFragmentShader(const rc::Shader& frag)
 {
-    fragmentShader = std::move(frag);
+    fragmentStage = frag.handle->getStageInfo();
+    hasFragment = true;
 }
