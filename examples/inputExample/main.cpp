@@ -29,17 +29,18 @@ int main()
     rc::Window window(description);
     rc::InitVulkan(window);
 
-    rc::Shader vertex = rc::LoadShader("shaders/default_vert.spv", rc::ShaderType::VERTEX);
-    rc::Shader fragment = rc::LoadShader("shaders/default_frag.spv", rc::ShaderType::FRAGMENT);
+    auto vertex = rc::Assets::Create<rc::Shader>("shaders/default_vert.spv", rc::ShaderType::VERTEX);
+    auto fragment = rc::Assets::Create<rc::Shader>("shaders/default_frag.spv", rc::ShaderType::FRAGMENT);
 
-    rc::SetShaders(vertex, fragment);
+    rc::SetShaders(*vertex, *fragment);
 
     rc::Camera2D camera(description.width, description.height);
     rc::SetCamera(camera);
 
     glm::vec2 pos = {400.f, 300.f};
 
-    auto rectangle = rc::CreateRectangle(pos, 40.f, 40.f, { 255, 0, 0, 0 });
+    auto defaultMaterial = rc::Assets::Create<rc::Material>(rc::Color{255, 255, 255});
+    auto rectangle = rc::Shapes::CreateRectangle(pos, 40.f, 40.f, defaultMaterial);
 
     while (!window.ShouldClose())
     {
@@ -57,7 +58,7 @@ int main()
         rc::EndFrame();
     }
 
-    rc::DestroyObject(rectangle);
+    rc::Shapes::DestroyObject(rectangle);
 
     window.Terminate();
 

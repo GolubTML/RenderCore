@@ -8,6 +8,7 @@ namespace rc
 {
     class Texture2D;
     struct Material;
+    class Shader;
 }
 
 class MaterialSystem;
@@ -30,6 +31,7 @@ private:
 
     std::vector<std::unique_ptr<rc::Texture2D>> textures;
     std::vector<std::unique_ptr<rc::Material>> materials;
+    std::vector<std::unique_ptr<rc::Shader>> shaders;
 };
 
 #include "resourceManager.inl"

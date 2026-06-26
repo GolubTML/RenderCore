@@ -24,7 +24,7 @@ private:
     VkDescriptorSetLayout matLayout = VK_NULL_HANDLE; 
     VkDescriptorPool materialPool = VK_NULL_HANDLE;
 
-    std::unique_ptr<rc::Texture2D> defaultTex = nullptr;
+    std::unique_ptr<rc::Texture2D> defaultTex;
 
     void createMaterialDescriptorLayout();
     void createMaterialDescriptorPool();

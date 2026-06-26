@@ -4,7 +4,7 @@
 
 #include "RenderCore/core/rcTexture2D.hpp"
 #include "RenderCore/core/rcMaterial.hpp"
-#include "RenderCore/core/rcRenderItem.hpp"
+#include "RenderCore/core/rcShader.hpp"
 #include "RenderCore/rcInternal.hpp"
 
 #include "engine/materialSystem.hpp"
@@ -34,6 +34,16 @@ T* ResourceManager::create(Args&&... args)
         T* ptr = resource.get();
         
         materials.push_back(std::move(resource));
+
+        return ptr;
+    }
+    else if constexpr (std::is_same_v<T, rc::Shader>)
+    {
+        auto resource = std::make_unique<rc::Shader>(std::forward<Args>(args)...);
+
+        T* ptr = resource.get();
+
+        shaders.push_back(std::move(resource));
 
         return ptr;
     }
@@ -70,5 +80,18 @@ void ResourceManager::destroy(T* resource)
             materialSystem->destroyMaterial(it->get());
             materials.erase(it);
         }
+    }
+    else if constexpr (std::is_same_v<T, rc::Shader>)
+    {
+        auto it = std::find_if(
+            shaders.begin(), shaders.end(),
+            [&](auto& ptr)
+            {
+                return ptr.get() == resource;
+            }
+        );
+
+        if (it != shaders.end())
+            shaders.erase(it);
     }
 }
