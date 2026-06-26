@@ -6,12 +6,13 @@
 #include "RenderCore/core/camera/camera2D.hpp"
 #include "RenderCore/core/camera/camera3D.hpp"
 #include "RenderCore/core/rcMaterial.hpp"
+#include "RenderCore/core/rcTexture2D.hpp"
 
+#include "RenderCore/rcAssets.hpp"
 #include "RenderCore/rcTypes.hpp"
 #include "RenderCore/rcTime.hpp"
 #include "RenderCore/rcInput.hpp"
 #include "RenderCore/rcShapes.hpp"
-#include "RenderCore/rcTexture2D.hpp"
 
 namespace rc
 {

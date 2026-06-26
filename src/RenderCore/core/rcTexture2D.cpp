@@ -1,4 +1,4 @@
-#include "RenderCore/rcTexture2D.hpp"
+#include "RenderCore/core/rcTexture2D.hpp"
 #include "RenderCore/rcInternal.hpp"
 
 #include "vulkanBackend/vulkanTexture.hpp"

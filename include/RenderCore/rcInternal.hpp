@@ -10,7 +10,7 @@ namespace rc
 
 class VulkanDevice;
 class VulkanCommandBuffer;
-class MaterialSystem;
+class ResourceManager;
 
 namespace rc::Internal
 {
@@ -18,7 +18,7 @@ namespace rc::Internal
     extern Camera* gCamera;
     extern VulkanDevice* gVulkDevice;
     extern VulkanCommandBuffer* gCmd;
-    extern MaterialSystem* gMaterialSystem;
+    extern ResourceManager* gResourceManager;
 
     extern bool currentKeys[GLFW_KEY_LAST];
     extern bool previousKeys[GLFW_KEY_LAST];

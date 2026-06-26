@@ -14,8 +14,8 @@ public:
     void init(VulkanDevice& vDevice, const VulkanCommandBuffer& cmd);
     void cleanup(VkDevice device);
 
-    rc::Material* createMaterial(rc::Texture2D* texture, rc::Color color);
-    void destroyMaterial(rc::Material* material);
+    void createMaterial(rc::Material& mat, rc::Color color, rc::Texture2D* texture = nullptr);
+    void destroyMaterial(rc::Material& material);
 
     VkDescriptorSetLayout getMaterialLayout() const;
 
@@ -25,7 +25,6 @@ private:
     VkDescriptorPool materialPool = VK_NULL_HANDLE;
 
     std::unique_ptr<rc::Texture2D> defaultTex = nullptr;
-    std::vector<std::unique_ptr<rc::Material>> allocatedMaterials;
 
     void createMaterialDescriptorLayout();
     void createMaterialDescriptorPool();

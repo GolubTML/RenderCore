@@ -11,7 +11,7 @@
 #include "vulkanBackend/render/vulkanCommandBuffer.hpp"
 #include "vulkanBackend/render/vulkanRenderer.hpp"  
 
-#include "engine/materials/materialSystem.hpp"
+#include "engine/resourceManager.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -22,7 +22,7 @@ namespace rc::Internal
     Camera* gCamera = nullptr;
     VulkanDevice* gVulkDevice = nullptr;
     VulkanCommandBuffer* gCmd = nullptr;
-    MaterialSystem* gMaterialSystem = nullptr;
+    ResourceManager* gResourceManager = nullptr;
 
     bool currentKeys[GLFW_KEY_LAST] = {};
     bool previousKeys[GLFW_KEY_LAST] = {};
@@ -40,6 +40,7 @@ namespace rc
     VulkanRenderer renderer;
 
     MaterialSystem materialSystem;
+    ResourceManager resourceManager;
 
     void Init()
     {
@@ -63,7 +64,8 @@ namespace rc
         renderPass.init(device, swapchain);
         
         materialSystem.init(device, commandBuffer);
-        Internal::gMaterialSystem = &materialSystem;
+        resourceManager.init(materialSystem);
+        Internal::gResourceManager = &resourceManager;
 
         pipeline.init(device.getDevice(), materialSystem.getMaterialLayout());
 
@@ -90,6 +92,7 @@ namespace rc
     {
         std::cout << "Clean up all systems.." << "\n";
 
+        resourceManager.cleanup(device.getDevice());
         materialSystem.cleanup(device.getDevice());
 
         renderer.cleanup(device.getDevice());

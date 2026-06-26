@@ -5,6 +5,8 @@
 #include "vulkanBackend/vulkanDevice.hpp"
 #include "engine/mesh.hpp"
 
+#include "RenderCore/rcAssets.hpp"
+
 #include <utility>
 
 namespace rc::Shapes

@@ -27,38 +27,36 @@ int main()
 
     // And now we can use Materials!
     // Let's load the texture
+    auto texture = rc::Assets::Create<rc::Texture2D>("assets/dirt.png");
+    
+    // And create the material
+    auto material = rc::Assets::Create<rc::Material>(
+        rc::Color{255, 255, 255}, 
+        texture
+    );
+
+    auto defaultMaterial = rc::Assets::Create<rc::Material>(rc::Color{60, 255, 255});
+
+    auto rectangle = rc::Shapes::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
+    auto rectangle2 = rc::Shapes::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
+
+    while (!window.ShouldClose())
     {
-        rc::Texture2D texture("assets/dirt.png");
-        
-        // And create the material
-        rc::Material* material = rc::CreateMaterial({255, 255, 255}, texture);
-        rc::Material* defaultMaterial = rc::CreateMaterial({60, 255, 255});
+        window.PollEvents();
+        float dt = rc::Time::GetDeltaTime();
 
-        auto rectangle = rc::Shapes::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
-        auto rectangle2 = rc::Shapes::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
+        rc::ClearColor(0.01f, 0.01f, 0.01f);
 
-        while (!window.ShouldClose())
-        {
-            window.PollEvents();
-            float dt = rc::Time::GetDeltaTime();
+        rc::BeginFrame();
 
-            rc::ClearColor(0.01f, 0.01f, 0.01f);
+            rc::DrawObject(rectangle);
+            rc::DrawObject(rectangle2);
 
-            rc::BeginFrame();
+        rc::EndFrame();
+    }
 
-                rc::DrawObject(rectangle);
-                rc::DrawObject(rectangle2);
-
-            rc::EndFrame();
-        }
-
-        rc::Shapes::DestroyObject(rectangle);
-        rc::Shapes::DestroyObject(rectangle2);
-
-        // We need also destroy the material
-        rc::DestroyMaterial(material);
-        rc::DestroyMaterial(defaultMaterial);
-    }   
+    rc::Shapes::DestroyObject(rectangle);
+    rc::Shapes::DestroyObject(rectangle2);
 
     vertex.Destroy();
     fragment.Destroy();
