@@ -12,6 +12,7 @@ namespace rc
 
         Vec2 operator+(const Vec2& other) const;
         Vec2 operator-(const Vec2& other) const;
+        Vec2 operator-() const;
 
         Vec2 operator*(float scalar) const;
         Vec2 operator/(float scalar) const;
@@ -48,6 +49,7 @@ namespace rc
         Vec2 Perpendicular();
 
         static Vec2 Lerp(const Vec2& a, const Vec2& b, float t);
+        static Vec2 UnclampedLerp(const Vec2& a, const Vec2& b, float t);
         static Vec2 Min(const Vec2& a, const Vec2& b);
         static Vec2 Max(const Vec2& a, const Vec2& b);
         Vec2 Clamp(const Vec2& min, const Vec2& max) const;

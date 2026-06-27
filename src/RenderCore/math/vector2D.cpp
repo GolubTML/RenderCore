@@ -14,6 +14,12 @@ namespace rc
     {
         return Vec2(x - other.x, y - other.y);
     }
+
+    Vec2 Vec2::operator-() const
+    {
+        return Vec2(-x, -y);
+    }
+
     Vec2 Vec2::operator*(float scalar) const
     {
         return Vec2(x * scalar, y * scalar);
@@ -186,7 +192,12 @@ namespace rc
 
         return Vec2(a + (b - a) * clampedT);
     }
-    
+
+    Vec2 Vec2::UnclampedLerp(const Vec2& a, const Vec2& b, float t)
+    {
+        return Vec2(a + (b - a) * t);
+    }
+
     Vec2 Vec2::Min(const Vec2& a, const Vec2& b)
     {
         return Vec2(std::min(a.x, b.x), std::min(a.y, b.y));
