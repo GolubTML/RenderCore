@@ -2,17 +2,18 @@
 
 #include <cstdint>
 #include <string>
-#include <glm/glm.hpp>
+#include "RenderCore/math/vector3D.hpp"
+#include "RenderCore/math/matrix4.hpp"
 
 namespace rc
 {
     struct Transform
     {
-        glm::vec3 position{0.f};
-        glm::vec3 rotation{0.f};
-        glm::vec3 scale{1.f};
+        rc::Vec3 position{0.f};
+        rc::Vec3 rotation{0.f};
+        rc::Vec3 scale{1.f};
     
-        glm::mat4 getModelMatrix() const;
+        rc::Mat4 getModelMatrix() const;
     };
 
     struct WindowDesc

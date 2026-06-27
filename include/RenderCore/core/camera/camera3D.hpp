@@ -1,27 +1,28 @@
 #pragma once
 
 #include "RenderCore/core/camera/camera.hpp"
+#include "RenderCore/math/vector3D.hpp"
 
 namespace rc
 {
     class Camera3D : public Camera
     {
     public:
-        Camera3D(const glm::vec3& pos, float fov, float w, float h);
+        Camera3D(const rc::Vec3& pos, float fov, float w, float h);
 
-        glm::mat4 getView() const override;
-        glm::mat4 getProjection() const override;
+        rc::Mat4 getView() const override;
+        rc::Mat4 getProjection() const override;
 
         void onResize(int width, int height) override;
 
-        glm::vec3 position{0.f};
+        rc::Vec3 position;
 
     private:
         float width;
         float height;
 
-        glm::vec3 front{0.f};
-        glm::vec3 up{0.f};
+        rc::Vec3 front;
+        rc::Vec3 up;
 
         float fov;
     };

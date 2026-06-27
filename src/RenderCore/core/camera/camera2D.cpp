@@ -1,22 +1,22 @@
 #include "RenderCore/core/camera/camera2D.hpp"
-#include <glm/gtc/matrix_transform.hpp>
+#include "RenderCore/math/vector3D.hpp"
 
 namespace rc
 {
     Camera2D::Camera2D(float width, float height)   
         : width(width), height(height) 
     {
-        position = {0.f, 0.f};
+        position = rc::Vec2(0.f, 0.f);
     }
 
-    glm::mat4 Camera2D::getView() const 
+    rc::Mat4 Camera2D::getView() const 
     {
-        return glm::translate(glm::mat4(1.f), glm::vec3(-position.x, -position.y, 0));
+        return rc::Mat4::Translate(rc::Mat4(1.f), rc::Vec3(-position.x, -position.y, 0));
     }
 
-    glm::mat4 Camera2D::getProjection() const
+    rc::Mat4 Camera2D::getProjection() const
     {
-        return glm::ortho(0.f, width, 0.f, height, -1.f, 1.f);
+        return rc::Mat4::Orthographic(0.f, width, 0.f, height, -1.f, 1.f);
     }
 
     void Camera2D::onResize(int width, int height) 

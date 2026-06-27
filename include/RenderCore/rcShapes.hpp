@@ -12,7 +12,7 @@ namespace rc
 
 namespace rc::Shapes
 {
-    RenderItem CreateRectangle(const glm::vec2& position, float w, float h, Material* material);
+    RenderItem CreateRectangle(const rc::Vec2& position, float w, float h, Material* material);
     
     void DestroyObject(RenderItem& item);
 }

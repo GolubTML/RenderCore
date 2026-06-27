@@ -24,7 +24,7 @@ int main()
     rc::Camera2D camera(description.width, description.height);
     rc::SetCamera(camera);
 
-    glm::vec2 pos = {300.f, 200.f};
+    rc::Vec2 pos = {300.f, 200.f};
 
     auto defaultMaterial = rc::Assets::Create<rc::Material>(rc::Color{255, 255, 255});
 

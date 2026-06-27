@@ -1,13 +1,17 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <vulkan/vulkan.h>
+#include "RenderCore/math/vector2D.hpp"
+#include "RenderCore/math/vector3D.hpp"
+#include "RenderCore/math/vector4.hpp"
+
+#include <array>
 
 struct Vertex
 {
-    glm::vec3 pos;
-    glm::vec4 color;
-    glm::vec2 uvPos;
+    rc::Vec3 pos;
+    rc::Vec4 color;
+    rc::Vec2 uvPos;
 
     static VkVertexInputBindingDescription getBindingDescription();
     static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescription();

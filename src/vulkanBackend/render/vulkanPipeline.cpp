@@ -1,7 +1,7 @@
 #include "vulkanBackend/render/vulkanPipeline.hpp"
 #include "vulkanBackend/vulkanSwapchain.hpp"
 #include "engine/vertex.hpp"
-#include <glm/glm.hpp>
+#include "RenderCore/math/matrix4.hpp"
 
 #include "RenderCore/core/rcShader.hpp"
 
@@ -13,7 +13,7 @@ void VulkanPipeline::init(VkDevice device, VkDescriptorSetLayout materialSetLayo
     VkPushConstantRange pushConstantRange{};
     pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     pushConstantRange.offset = 0;
-    pushConstantRange.size = sizeof(glm::mat4);
+    pushConstantRange.size = sizeof(rc::Mat4);
 
     std::array<VkDescriptorSetLayout, 2> layouts = {descriptorSetLayout, materialSetLayout};
 

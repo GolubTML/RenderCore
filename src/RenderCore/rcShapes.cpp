@@ -13,14 +13,14 @@ namespace rc::Shapes
 {
     std::pair<std::vector<Vertex>, std::vector<uint32_t>> CreateRectangleData(float w, float h, const Color& color);
 
-    RenderItem CreateRectangle(const glm::vec2& position, float w, float h, Material* material)
+    RenderItem CreateRectangle(const rc::Vec2& position, float w, float h, Material* material)
     {
         auto data = CreateRectangleData(w, h, material->color);
 
         RenderItem item 
         {
             .mesh = new Mesh(),
-            .transform = {glm::vec3(position.x, position.y, 0.f), glm::vec3{0.f}, glm::vec3{1.f}},
+            .transform = {rc::Vec3(position, 0.f), rc::Vec3::Zero(), rc::Vec3::One()},
             .material = material
         };
 

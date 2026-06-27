@@ -134,7 +134,7 @@ namespace rc
             0, 0, 0, 1
         );
 
-        return model * translate;
+        return translate * model;
     }
     Mat4 Mat4::Scale(const Mat4& model, const Vec3& size)
     {
@@ -145,7 +145,7 @@ namespace rc
             0,      0,      0,      1
         );
 
-        return model * sizeMat;
+        return sizeMat * model;
     }
 
     Mat4 Mat4::RotateX(const Mat4& model, float angle)
@@ -162,7 +162,7 @@ namespace rc
             0, 0,        0,         1
         );
 
-        return model * rotated;
+        return rotated * model;
     }
     Mat4 Mat4::RotateY(const Mat4& model, float angle)
     {
@@ -178,7 +178,7 @@ namespace rc
             0,         0, 0,         1
         );
 
-        return model * rotated;
+        return rotated * model;
     }
     Mat4 Mat4::RotateZ(const Mat4& model, float angle)
     {
@@ -194,7 +194,7 @@ namespace rc
             0,        0,         0,  1
         );
 
-        return model * rotated;
+        return rotated * model;
     }
 
     Mat4 Mat4::LookAt(const Vec3& eye, const Vec3& target, const Vec3& up)
@@ -208,9 +208,9 @@ namespace rc
         Vec3 y = z.cross(x);
 
         return Mat4(
-            x.x, y.x, z.x, -(x.dot(eye)),
-            x.y, y.y, z.y, -(y.dot(eye)),
-            x.z, y.z, z.z, -(z.dot(eye)),
+            x.x, x.y, x.z, -(x.dot(eye)),
+            y.x, y.y, y.z, -(y.dot(eye)),
+            z.x, z.y, z.z, -(z.dot(eye)),
             0,   0,   0,   1
         );
     }
@@ -234,8 +234,8 @@ namespace rc
     {
         return Mat4(
             2 / (right - left), 0, 0, -(right + left) / (right - left),
-            0, 2 / (top - bottom), 0, -(top + bottom) / (top - bottom),
-            0, 0, 2 / (near - far),   -(near + far) / (near - far),
+            0, -2 / (top - bottom), 0, (top + bottom) / (top - bottom),
+            0, 0, 2 / (near - far), -(near + far) / (near - far),
             0, 0, 0, 1
         );
     }

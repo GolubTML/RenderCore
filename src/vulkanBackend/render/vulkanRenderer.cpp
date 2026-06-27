@@ -199,8 +199,8 @@ void VulkanRenderer::draw(rc::RenderItem& item)
     vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, 
         pipeline->getPipelineLayout(), 1, 1, &matSet, 0, nullptr);
 
-    glm::mat4 model = item.transform.getModelMatrix();
-    vkCmdPushConstants(cmdBuf, pipeline->getPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &model);
+    rc::Mat4 model = item.transform.getModelMatrix();
+    vkCmdPushConstants(cmdBuf, pipeline->getPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(rc::Mat4), &model);
 
     item.mesh->draw(*cmd, currentFrame);
 }

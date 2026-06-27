@@ -1,7 +1,7 @@
 #include <RenderCore/RenderCore.hpp>
 #include <iostream>
 
-void input(glm::vec3& pos, float dt)
+void input(rc::Vec3& pos, float dt)
 {
     // we will be using methods from rc::Input
     // and rc::Key too
@@ -37,7 +37,7 @@ int main()
     rc::Camera2D camera(description.width, description.height);
     rc::SetCamera(camera);
 
-    glm::vec2 pos = {400.f, 300.f};
+    rc::Vec2 pos(400.f, 300.f);
 
     auto defaultMaterial = rc::Assets::Create<rc::Material>(rc::Color{255, 255, 255});
     auto rectangle = rc::Shapes::CreateRectangle(pos, 40.f, 40.f, defaultMaterial);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RenderCore/core/camera/camera.hpp"
+#include "RenderCore/math/vector2D.hpp"
 
 namespace rc
 {
@@ -9,12 +10,12 @@ namespace rc
     public:
         Camera2D(float width, float height);
 
-        glm::mat4 getView() const override;
-        glm::mat4 getProjection() const override;
+        rc::Mat4 getView() const override;
+        rc::Mat4 getProjection() const override;
 
         void onResize(int width, int height) override;
 
-        glm::vec2 position;
+        rc::Vec2 position;
 
     private:
         float width;

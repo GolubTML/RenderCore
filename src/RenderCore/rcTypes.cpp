@@ -1,20 +1,18 @@
 #include "RenderCore/rcTypes.hpp"
-#include <glm/gtc/matrix_transform.hpp>
-
 
 namespace rc
 {
-    glm::mat4 Transform::getModelMatrix() const
+    rc::Mat4 Transform::getModelMatrix() const
     {
-        glm::mat4 model = glm::mat4(1.0f);
+        rc::Mat4 model = rc::Mat4(1.0f);
     
-        model = glm::translate(model, position);
+        model = rc::Mat4::Translate(model, position);
     
-        model = glm::rotate(model, rotation.x, {1,0,0});
-        model = glm::rotate(model, rotation.y, {0,1,0});
-        model = glm::rotate(model, rotation.z, {0,0,1});
+        model = rc::Mat4::RotateX(model, rotation.x);
+        model = rc::Mat4::RotateY(model, rotation.y);
+        model = rc::Mat4::RotateZ(model, rotation.z);
     
-        model = glm::scale(model, scale);
+        model = rc::Mat4::Scale(model, scale);
     
         return model;
     }
