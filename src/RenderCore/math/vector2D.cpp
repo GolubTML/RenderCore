@@ -63,11 +63,19 @@ namespace rc
         return *this;
     }
 
+    Vec2& Vec2::operator=(const Vec2& other)
+    {
+        this->x = other.x;
+        this->y = other.y;
+
+        return *this;
+    }
+
     bool Vec2::operator==(const Vec2& other) const
     {
         constexpr float epsilon = 0.00001f;
 
-        return abs(x - other.x) < epsilon && abs(y - other.y) < epsilon;
+        return std::abs(x - other.x) < epsilon && std::abs(y - other.y) < epsilon;
     }
 
     bool Vec2::operator!=(const Vec2& other) const
@@ -127,7 +135,7 @@ namespace rc
 
     Vec2 Vec2::Abs() const
     {
-        return Vec2(abs(x), abs(y));
+        return Vec2(std::abs(x), std::abs(y));
     }
 
     Vec2 Vec2::rotateDeg(float deg) const

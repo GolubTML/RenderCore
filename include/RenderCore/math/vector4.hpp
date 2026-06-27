@@ -40,7 +40,7 @@ namespace rc
         Vec3 Homogeneous() const;
 
         static Vec4 Point(const Vec3& p);
-        static Vec4 Directrion(const Vec3& p);
+        static Vec4 Direction(const Vec3& p);
 
         static Vec4 Zero();
         static Vec4 One();

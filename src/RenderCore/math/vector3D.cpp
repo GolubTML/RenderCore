@@ -65,11 +65,20 @@ namespace rc
         return *this;
     }
 
+    Vec3& Vec3::operator=(const Vec3& other)
+    {
+        this->x = other.x;
+        this->y = other.y;
+        this->z = other.z;
+
+        return *this;
+    }
+    
     bool Vec3::operator==(const Vec3& other) const
     {
         constexpr float epsilon = 0.00001f;
 
-        return abs(x - other.x) < epsilon && abs(y - other.y) < epsilon && abs(z - other.z) < epsilon;
+        return std::abs(x - other.x) < epsilon && std::abs(y - other.y) < epsilon && std::abs(z - other.z) < epsilon;
     }
     bool Vec3::operator!=(const Vec3& other) const
     {

@@ -39,7 +39,7 @@ namespace rc
     {
         constexpr float epsilon = 0.00001f;
 
-        return abs(x - other.x) < epsilon && abs(y - other.y) < epsilon && abs(z - other.z) < epsilon && abs(w - other.w) < epsilon;
+        return std::abs(x - other.x) < epsilon && std::abs(y - other.y) < epsilon && std::abs(z - other.z) < epsilon && std::abs(w - other.w) < epsilon;
     }
     bool Vec4::operator!=(const Vec4& other) const
     {

@@ -27,6 +27,8 @@ namespace rc
         Vec3& operator*=(float scalar);
         Vec3& operator/=(float scalar);
 
+        Vec3& operator=(const Vec3& other);
+
         bool operator==(const Vec3& other) const;
         bool operator!=(const Vec3& other) const;
 
