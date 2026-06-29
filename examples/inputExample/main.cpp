@@ -58,7 +58,7 @@ int main()
         rc::EndFrame();
     }
 
-    rc::Shapes::DestroyObject(rectangle);
+    rc::DestroyObject(rectangle);
 
     window.Terminate();
 

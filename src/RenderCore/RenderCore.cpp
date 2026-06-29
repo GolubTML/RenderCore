@@ -159,4 +159,9 @@ namespace rc
     {
         renderer.draw(item);
     }
+
+    void DestroyObject(RenderItem& item)
+    {
+        item.mesh->cleanup(Internal::gVulkDevice->getDevice());
+    }
 }

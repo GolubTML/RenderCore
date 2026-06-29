@@ -1,5 +1,6 @@
 #include <RenderCore/RenderCore.hpp>
-#include <iostream>
+#include <RenderCore/math/math.hpp>
+#include <RenderCore/2d/shapes.hpp>
 
 int main()
 {
@@ -57,8 +58,8 @@ int main()
         rc::EndFrame();
     }
 
-    rc::Shapes::DestroyObject(rectangle);
-    rc::Shapes::DestroyObject(rectangle2);
+    rc::DestroyObject(rectangle);
+    rc::DestroyObject(rectangle2);
 
     window.Terminate();
 

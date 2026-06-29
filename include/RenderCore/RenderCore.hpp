@@ -12,7 +12,6 @@
 #include "RenderCore/rcTypes.hpp"
 #include "RenderCore/rcTime.hpp"
 #include "RenderCore/rcInput.hpp"
-#include "RenderCore/rcShapes.hpp"
 
 namespace rc
 {
@@ -29,4 +28,5 @@ namespace rc
     void EndFrame();
 
     void DrawObject(RenderItem& item);
+    void DestroyObject(RenderItem& item);
 }

@@ -1,5 +1,11 @@
 #pragma once
 
+#include "vector2D.hpp"
+#include "vector3D.hpp"
+#include "vector4.hpp"
+#include "matrix4.hpp"
+#include "quaternion.hpp"
+
 namespace rc::Math
 {
     constexpr float PI = 3.1415926535f;
