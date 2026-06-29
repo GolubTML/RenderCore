@@ -20,7 +20,7 @@ namespace rc::Shapes
         RenderItem item 
         {
             .mesh = new Mesh(),
-            .transform = {rc::Vec3(position, 0.f), rc::Vec3::Zero(), rc::Vec3::One()},
+            .transform = {rc::Vec3(position, 0.f), rc::Quaternion::Identity(), rc::Vec3::One()},
             .material = material
         };
 

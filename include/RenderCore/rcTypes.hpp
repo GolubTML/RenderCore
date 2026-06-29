@@ -4,16 +4,17 @@
 #include <string>
 #include "RenderCore/math/vector3D.hpp"
 #include "RenderCore/math/matrix4.hpp"
+#include "RenderCore/math/quaternion.hpp"
 
 namespace rc
 {
     struct Transform
     {
-        rc::Vec3 position{0.f};
-        rc::Vec3 rotation{0.f};
-        rc::Vec3 scale{1.f};
+        Vec3 position{0.f};
+        Quaternion rotation = Quaternion::Identity();
+        Vec3 scale{1.f};
     
-        rc::Mat4 getModelMatrix() const;
+        Mat4 getModelMatrix() const;
     };
 
     struct WindowDesc

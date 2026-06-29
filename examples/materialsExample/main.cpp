@@ -47,6 +47,8 @@ int main()
 
         rc::ClearColor(0.01f, 0.01f, 0.01f);
 
+        rectangle.transform.rotation.rotate(rc::Vec3::Forward(), 90.f * dt);
+
         rc::BeginFrame();
 
             rc::DrawObject(rectangle);
