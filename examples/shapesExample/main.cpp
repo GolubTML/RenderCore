@@ -1,6 +1,6 @@
 #include <RenderCore/RenderCore.hpp>
 #include <RenderCore/math/math.hpp>
-#include <RenderCore/2d/shapes.hpp>
+#include <RenderCore/2d/shape2D.hpp>
 
 #include <cmath>
 
@@ -22,7 +22,7 @@ int main()
     {
         .width = 800,
         .height = 600,
-        .title = "Material Example",
+        .title = "Shapes Example",
         .resizable = true
     };
 
@@ -37,7 +37,11 @@ int main()
     rc::Camera2D camera(description.width, description.height);
     rc::SetCamera(camera);
 
+    auto heartTexture = rc::Assets::Create<rc::Texture2D>("assets/heart.png");
+
     auto defaultMaterial = rc::Assets::Create<rc::Material>(rc::Color{60, 129, 50});
+    auto triangleMaterial = rc::Assets::Create<rc::Material>(rc::Color{180, 50, 80});
+    auto heartMat = rc::Assets::Create<rc::Material>(rc::Color{255, 255, 255}, heartTexture);
 
     // new type for 2D rectangles
     rc::Rectangle rect
@@ -50,18 +54,20 @@ int main()
     // auto quad = rc::Shapes::CreateRectangle(posX, posY, width, height, defaultMaterial);
     // auto quad = rc::Shapes::CreateRectangle(pos, width, height, defaultMaterial);
     // auto quad = rc::Shapes::CreateRectangle(pos, size, defaultMaterial); -- size is Vec2
-    auto quad = rc::Shapes::CreateRectangle(rect, defaultMaterial);
+    auto quad = rc::Shape2D::CreateRectangle(rect, defaultMaterial);
+    auto heart = rc::Shape2D::CreateRectangle(rect, heartMat);
 
     // and new triangle here
-
     rc::Triangle triangle = rc::Triangle::Equilateral(rc::Vec2(0, 0), 50.f);
 
-    auto trian = rc::Shapes::CreateTriangle(triangle, defaultMaterial);
+    auto trian = rc::Shape2D::CreateTriangle(triangle, triangleMaterial);
 
     rc::Vec2 point = rc::Vec2(400.f, 300.f);
     float angle = 0.f;
-    float angle2 = 180.;
-    float radius = 100.f;
+    float angle2 = 180.f;
+    float angle3 = 90.f;
+
+    float radius = 150.f;
 
     while (!window.ShouldClose())
     {
@@ -74,20 +80,29 @@ int main()
         angle2 += 1.f * dt;
         if (angle2 >= 360.f) angle2 = 0.f;
 
+        angle3 += 1.f * dt;
+        if (angle3 >= 360.f) angle3 = 0.f;
+
         rc::ClearColor(0.01f, 0.01f, 0.01f);
 
-        rotateObjectAround(trian.transform, point, radius, angle);
+        rotateObjectAround(trian.transform, point, radius - 25.f, angle);
         rotateObjectAround(quad.transform, point, radius, angle2);
-        // trian.transform.rotation.rotate(rc::Vec3::Forward(), 90.f * dt); 
+        rotateObjectAround(heart.transform, point, radius + 25.f, angle3);
+
+        trian.transform.rotation.rotate(rc::Vec3::Forward(), 120.f * dt); 
+        quad.transform.rotation.rotate(rc::Vec3::Forward(), 90.f * dt); 
+        heart.transform.rotation.rotate(rc::Vec3::Forward(), 80.f * dt);
 
         rc::BeginFrame();
             rc::DrawObject(quad);
             rc::DrawObject(trian);
+            rc::DrawObject(heart);
         rc::EndFrame();
     }
 
     rc::DestroyObject(quad);
     rc::DestroyObject(trian);
+    rc::DestroyObject(heart);
 
     window.Terminate();
 

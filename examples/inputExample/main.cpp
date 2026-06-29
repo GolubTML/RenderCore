@@ -1,4 +1,5 @@
 #include <RenderCore/RenderCore.hpp>
+#include <RenderCore/2d/shape2D.hpp>
 #include <iostream>
 
 void input(rc::Vec3& pos, float dt)
@@ -40,7 +41,7 @@ int main()
     rc::Vec2 pos(400.f, 300.f);
 
     auto defaultMaterial = rc::Assets::Create<rc::Material>(rc::Color{255, 255, 255});
-    auto rectangle = rc::Shapes::CreateRectangle(pos, 40.f, 40.f, defaultMaterial);
+    auto rectangle = rc::Shape2D::CreateRectangle(pos, 40.f, 40.f, defaultMaterial);
 
     while (!window.ShouldClose())
     {

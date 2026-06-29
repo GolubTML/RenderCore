@@ -1,4 +1,4 @@
-#include "RenderCore/2d/shapes.hpp"
+#include "RenderCore/2d/shape2D.hpp"
 #include <vector>
 #include <utility>
 #include "RenderCore/rcInternal.hpp"
@@ -6,7 +6,7 @@
 #include "engine/mesh.hpp"
 #include "RenderCore/core/rcMaterial.hpp"
 
-namespace rc::Shapes
+namespace rc::Shape2D
 {
     std::pair<std::vector<Vertex>, std::vector<uint32_t>> CreateRectangleData(float w, float h, const Color& color);
     std::pair<std::vector<Vertex>, std::vector<uint32_t>> CreateTriangleData(const Triangle& triangle, const Color& color);

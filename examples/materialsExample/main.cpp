@@ -1,6 +1,6 @@
 #include <RenderCore/RenderCore.hpp>
 #include <RenderCore/math/math.hpp>
-#include <RenderCore/2d/shapes.hpp>
+#include <RenderCore/2d/shape2D.hpp>
 
 int main()
 {
@@ -38,8 +38,8 @@ int main()
 
     auto defaultMaterial = rc::Assets::Create<rc::Material>(rc::Color{60, 255, 255});
 
-    auto rectangle = rc::Shapes::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
-    auto rectangle2 = rc::Shapes::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
+    auto rectangle = rc::Shape2D::CreateRectangle({140.f, 300.f}, 160.f, 160.f, material);
+    auto rectangle2 = rc::Shape2D::CreateRectangle({description.width - 160.f, 300.f}, 160.f, 160.f, defaultMaterial);
 
     while (!window.ShouldClose())
     {

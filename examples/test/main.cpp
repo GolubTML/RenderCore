@@ -1,4 +1,5 @@
 #include <RenderCore/RenderCore.hpp>
+#include <RenderCore/2d/shape2D.hpp>
 #include <iostream>
 
 int main()
@@ -28,8 +29,8 @@ int main()
 
     auto defaultMaterial = rc::Assets::Create<rc::Material>(rc::Color{255, 255, 255});
 
-    auto rectangle = rc::Shapes::CreateRectangle(pos, 80.f, 40.f, defaultMaterial);
-    auto rectangle2 = rc::Shapes::CreateRectangle({500.f, 400.f}, 70.f, 70.f, defaultMaterial);
+    auto rectangle = rc::Shape2D::CreateRectangle(pos, 80.f, 40.f, defaultMaterial);
+    auto rectangle2 = rc::Shape2D::CreateRectangle({500.f, 400.f}, 70.f, 70.f, defaultMaterial);
 
     while (!window.ShouldClose())
     {

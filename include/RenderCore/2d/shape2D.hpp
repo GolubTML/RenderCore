@@ -8,7 +8,7 @@ namespace rc
     class Material;
 }
 
-namespace rc::Shapes
+namespace rc::Shape2D
 {
     RenderItem CreateRectangle(float x, float y, float w, float h, Material* material);
     RenderItem CreateRectangle(const Vec2& position, float w, float h, Material* material);
