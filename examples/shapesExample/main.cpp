@@ -29,11 +29,19 @@ int main()
     rc::Window window(description);
     rc::InitVulkan(window);
 
-    auto vertex = rc::Assets::Create<rc::Shader>("shaders/default_vert.spv", rc::ShaderType::VERTEX);
-    auto fragment = rc::Assets::Create<rc::Shader>("shaders/default_frag.spv", rc::ShaderType::FRAGMENT);
+    /*
+        Now, there is no need to create and load shaders to the program
+        RenderCore has default prebuild shaders in it
 
-    rc::SetShaders(*vertex, *fragment);
+        But, you can use your own shaders in any way
 
+        auto vertex = rc::Assets::Create<rc::Shader>("shaders/default_vert.spv", rc::ShaderType::VERTEX);
+        auto fragment = rc::Assets::Create<rc::Shader>("shaders/default_frag.spv", rc::ShaderType::FRAGMENT)
+        rc::SetShaders(*vertex, *fragment);
+
+        Or, you can skip this stage, and use basic shaders
+    */
+    
     rc::Camera2D camera(description.width, description.height);
     rc::SetCamera(camera);
 

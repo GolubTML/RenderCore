@@ -67,7 +67,7 @@ namespace rc
         resourceManager.init(materialSystem);
         Internal::gResourceManager = &resourceManager;
 
-        pipeline.init(device.getDevice(), materialSystem.getMaterialLayout());
+        pipeline.init(swapchain, device.getDevice(), materialSystem.getMaterialLayout(), renderPass.getRenderPass());
 
         framebuffers.init(device, swapchain, renderPass.getRenderPass());
         renderer.init(device, swapchain, framebuffers, renderPass, pipeline, commandBuffer);
@@ -85,7 +85,7 @@ namespace rc
         pipeline.setVertexShader(vertex);
         pipeline.setFragmentShader(fragment);
 
-        pipeline.build(swapchain, device.getDevice(), renderPass.getRenderPass());
+        pipeline.recreate(swapchain, device.getDevice(), renderPass.getRenderPass());
     }
 
     void Terminate()

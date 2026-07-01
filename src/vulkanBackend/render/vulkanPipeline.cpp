@@ -5,7 +5,10 @@
 
 #include "RenderCore/core/rcShader.hpp"
 
-void VulkanPipeline::init(VkDevice device, VkDescriptorSetLayout materialSetLayout)
+#include "vulkanBackend/defaultShaders/default_vert.hpp"
+#include "vulkanBackend/defaultShaders/default_frag.hpp"
+
+void VulkanPipeline::init(const VulkanSwapchain& swapchain, VkDevice device, VkDescriptorSetLayout materialSetLayout, VkRenderPass renderPass)
 {
     createDescriptorSetLayout(device);
 
@@ -28,14 +31,22 @@ void VulkanPipeline::init(VkDevice device, VkDescriptorSetLayout materialSetLayo
     if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
         throw std::runtime_error("Cannot create pipeline layout");
 
-    graphicsPipeline = VK_NULL_HANDLE;
+    VulkanShader vertex;
+    vertex.load(default_shader_vertex_code, default_shader_vertex_code_len, device, VK_SHADER_STAGE_VERTEX_BIT);
+    VulkanShader fragment;
+    fragment.load(default_shader_fragment, default_shader_fragment_len, device, VK_SHADER_STAGE_FRAGMENT_BIT);
+
+    vertexStage = vertex.getStageInfo();
+    fragmentStage = fragment.getStageInfo();
+
+    graphicsPipeline = createPipeline(swapchain, device, renderPass, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST, VK_POLYGON_MODE_FILL);
+
+    vertex.cleanup(device);
+    fragment.cleanup(device);
 }
 
-void VulkanPipeline::build(const VulkanSwapchain& swapchain, VkDevice device, VkRenderPass renderPass)
+void VulkanPipeline::recreate(const VulkanSwapchain& swapchain, VkDevice device, VkRenderPass renderPass)
 {
-    if (!hasVertex || !hasFragment)
-        throw std::runtime_error("Shaders must be set before creating pipeline!");
-
     if (graphicsPipeline != VK_NULL_HANDLE)
         vkDestroyPipeline(device, graphicsPipeline, nullptr);
 
@@ -229,11 +240,9 @@ VkPipeline VulkanPipeline::createPipeline(const VulkanSwapchain& swapchain,
 void VulkanPipeline::setVertexShader(const rc::Shader& vertex)
 {
     vertexStage = vertex.handle->getStageInfo();
-    hasVertex = true;
 }
 
 void VulkanPipeline::setFragmentShader(const rc::Shader& frag)
 {
     fragmentStage = frag.handle->getStageInfo();
-    hasFragment = true;
 }

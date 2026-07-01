@@ -10,6 +10,8 @@ public:
     VulkanShader() = default;
 
     void load(const std::string& path, VkDevice device, VkShaderStageFlagBits shaderFlag);
+    void load(const void* data, size_t size, VkDevice device, VkShaderStageFlagBits shaderFlag);
+
     void cleanup(VkDevice device);
 
     VkPipelineShaderStageCreateInfo getStageInfo() const;

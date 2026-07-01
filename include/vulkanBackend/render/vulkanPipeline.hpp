@@ -15,8 +15,8 @@ namespace rc
 class VulkanPipeline
 {
 public:
-    void init(VkDevice device, VkDescriptorSetLayout materialSetLayout);
-    void build(const VulkanSwapchain& swapchain, VkDevice device, VkRenderPass renderPass); // for graphics pipeline. Can be a bad idea
+    void init(const VulkanSwapchain& swapchain, VkDevice device, VkDescriptorSetLayout materialSetLayout, VkRenderPass renderPass);
+    void recreate(const VulkanSwapchain& swapchain, VkDevice device, VkRenderPass renderPass); // for graphics pipeline. Can be a bad idea
 
     void cleanup(VkDevice device);
 
@@ -34,9 +34,6 @@ public:
 private:
     VkPipelineShaderStageCreateInfo vertexStage{};
     VkPipelineShaderStageCreateInfo fragmentStage{};
-
-    bool hasVertex = false;
-    bool hasFragment = false;
 
     VkDescriptorSetLayout descriptorSetLayout;
     VkPipelineLayout pipelineLayout;

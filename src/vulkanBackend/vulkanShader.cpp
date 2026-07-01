@@ -9,12 +9,32 @@
 
 void VulkanShader::load(const std::string& path, VkDevice device, VkShaderStageFlagBits shaderFlag)
 {
-    auto shaderCode = readFile(path);
+    // auto shaderCode = readFile(path);
+ 
+    // VkShaderModuleCreateInfo createInfo{};
+    // createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    // createInfo.codeSize = shaderCode.size();
+    // createInfo.pCode = reinterpret_cast<const uint32_t*>(shaderCode.data());
+ 
+    // if (vkCreateShaderModule(device, &createInfo, nullptr, &module) != VK_SUCCESS)
+    //     throw std::runtime_error("Cannot create shader module!");
+ 
+    // shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    // shaderStage.stage = shaderFlag;
+    // shaderStage.module = module;
+    // shaderStage.pName = "main"; 
 
+    auto bytes = readFile(path);
+
+    load(bytes.data(), bytes.size(), device, shaderFlag);
+}
+
+void VulkanShader::load(const void* data, size_t size, VkDevice device, VkShaderStageFlagBits shaderFlag)
+{
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    createInfo.codeSize = shaderCode.size();
-    createInfo.pCode = reinterpret_cast<const uint32_t*>(shaderCode.data());
+    createInfo.codeSize = size;
+    createInfo.pCode = reinterpret_cast<const uint32_t*>(data);
 
     if (vkCreateShaderModule(device, &createInfo, nullptr, &module) != VK_SUCCESS)
         throw std::runtime_error("Cannot create shader module!");
