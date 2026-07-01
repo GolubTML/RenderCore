@@ -19,6 +19,8 @@ namespace rc::Shape2D
 
     RenderItem CreateRectangle(float x, float y, float w, float h, Material* material)
     {
+        if (!material) throw std::runtime_error("Material is nullptr!");
+
         Rectangle rect {.position = Vec2(x, y), .size = Vec2(w, h)};
 
         return CreateRectangle(rect, material);
@@ -26,6 +28,8 @@ namespace rc::Shape2D
 
     RenderItem CreateRectangle(const Vec2& position, float w, float h, Material* material)
     {
+        if (!material) throw std::runtime_error("Material is nullptr!");
+
         Rectangle rect {.position = position, .size = Vec2(w, h)};
 
         return CreateRectangle(rect, material);
@@ -33,6 +37,8 @@ namespace rc::Shape2D
 
     RenderItem CreateRectangle(const Vec2& position, const Vec2& size, Material* material)
     {
+        if (!material) throw std::runtime_error("Material is nullptr!");
+
         Rectangle rect {.position = position, .size = size};
 
         return CreateRectangle(rect, material);
@@ -40,6 +46,8 @@ namespace rc::Shape2D
 
     RenderItem CreateRectangle(const Rectangle& rect, Material* material)
     {
+        if (!material) throw std::runtime_error("Material is nullptr!");
+
         auto data = CreateRectangleData(rect.size.x, rect.size.y, material->color);
 
         RenderItem item 
@@ -63,47 +71,33 @@ namespace rc::Shape2D
     {
         Rectangle rect {.position = Vec2(x, y), .size = Vec2(w, h)};
 
-        return CreateRectangle(rect, color);
+        return CreateRectangle(rect, Assets::Create<Material>(color));
     }
 
     RenderItem CreateRectangle(const Vec2& position, float w, float h, Color color)
     {
         Rectangle rect {.position = position, .size = Vec2(w, h)};
 
-        return CreateRectangle(rect, color);
+        return CreateRectangle(rect, Assets::Create<Material>(color));
     }
 
     RenderItem CreateRectangle(const Vec2& position, const Vec2& size, Color color)
     {
         Rectangle rect {.position = position, .size = size};
 
-        return CreateRectangle(rect, color);
+        return CreateRectangle(rect, Assets::Create<Material>(color));
     }
 
     RenderItem CreateRectangle(const Rectangle& rect, Color color)
     {
-        auto data = CreateRectangleData(rect.size.x, rect.size.y, color);
-        auto tmpMat = Assets::Create<Material>(color);
-
-        RenderItem item 
-        {
-            .mesh = new Mesh(),
-            .transform = 
-            {
-                rc::Vec3(rect.position, 0.f), 
-                rc::Quaternion::Identity(), 
-                rc::Vec3::One()
-            },
-            .material = tmpMat
-        };
-
-        item.mesh->create(*Internal::gVulkDevice, data.first, data.second);
-
-        return item;
+        return CreateRectangle(rect, Assets::Create<Material>(color));
     }
+
 
     RenderItem CreateTriangle(const Vec2& A, const Vec2& B, const Vec2& C, Material* material)
     {
+        if (!material) throw std::runtime_error("Material is nullptr!");
+
         Triangle triangle = { A, B, C };
 
         return CreateTriangle(triangle, material);
@@ -111,6 +105,8 @@ namespace rc::Shape2D
 
     RenderItem CreateTriangle(const Triangle& triangle, Material* material)
     {
+        if (!material) throw std::runtime_error("Material is nullptr!");
+
         auto data = CreateTriangleData(triangle, material->color);
 
         Vec2 center = Vec2((triangle.A.x + triangle.B.x + triangle.C.x) / 3.f,
@@ -137,36 +133,19 @@ namespace rc::Shape2D
     {
         Triangle triangle = { A, B, C };
 
-        return CreateTriangle(triangle, color);
+        return CreateTriangle(triangle, Assets::Create<Material>(color));
     }
 
     RenderItem CreateTriangle(const Triangle& triangle, Color color)
     {
-        auto data = CreateTriangleData(triangle, color);
-        auto tmpMat = Assets::Create<Material>(color); 
-
-        Vec2 center = Vec2((triangle.A.x + triangle.B.x + triangle.C.x) / 3.f,
-                           (triangle.A.y + triangle.B.y + triangle.C.y) / 3.f);
-
-        RenderItem item 
-        {
-            .mesh = new Mesh(),
-            .transform = 
-            { 
-                rc::Vec3(center, 0.f), 
-                rc::Quaternion::Identity(), 
-                rc::Vec3::One()
-            },
-            .material = tmpMat
-        };
-
-        item.mesh->create(*Internal::gVulkDevice, data.first, data.second);
-
-        return item;
+        return CreateTriangle(triangle, Assets::Create<Material>(color));
     }
+
 
     RenderItem CreateCircle(const Vec2& pos, float radius, Material* material)
     {
+        if (!material) throw std::runtime_error("Material is nullptr!");
+
         // by default, there will be 32 segments
         Circle circle
         {
@@ -180,6 +159,8 @@ namespace rc::Shape2D
 
     RenderItem CreateCircle(const Circle& circle, Material* material)
     {
+        if (!material) throw std::runtime_error("Material is nullptr!");
+
         auto data = CreateCircleData(circle, material->color);
 
         RenderItem item 
@@ -208,29 +189,49 @@ namespace rc::Shape2D
             .segments = 32
         };
 
-        return CreateCircle(circle, color);
+        return CreateCircle(circle, Assets::Create<Material>(color));
     }
 
     RenderItem CreateCircle(const Circle& circle, Color color)
     {
-        auto data = CreateCircleData(circle, color);
-        auto tmpMat = Assets::Create<Material>(color); 
+        return CreateCircle(circle, Assets::Create<Material>(color));
+    }
 
-        RenderItem item 
-        {
-            .mesh = new Mesh(),
-            .transform = 
-            {
-                rc::Vec3(circle.position, 0.f), 
-                rc::Quaternion::Identity(), 
-                rc::Vec3::One()
-            },
-            .material = tmpMat
-        };
+    RenderItem CreateLine(const Vec2& start, const Vec2& end, float thickness, Material* material)
+    {
+        if (!material) throw std::runtime_error("Material is nullptr!");
 
-        item.mesh->create(*Internal::gVulkDevice, data.first, data.second);
+        Line line {.start = start, .end = end};
+
+        return CreateLine(line, thickness, material);
+    }
+
+    RenderItem CreateLine(const Line& line, float thickness, Material* material)
+    {
+        if (!material) throw std::runtime_error("Material is nullptr!");
+        
+        Vec2 delta = line.end - line.start;
+        float length = delta.length();
+
+        Vec2 center = (line.start + line.end) * 0.5f;
+
+        auto item = CreateRectangle(center, length, thickness, material);
+
+        float angle = Math::RadToDeg(atan2(delta.y, delta.x));
+
+        item.transform.rotation = Quaternion::FromAxisAngle(Vec3::Forward(), angle);
 
         return item;
+    }
+
+    RenderItem CreateLine(const Vec2& start, const Vec2& end, float thickness, Color color)
+    {
+        return CreateLine({start, end}, thickness, Assets::Create<Material>(color));
+    }
+    
+    RenderItem CreateLine(const Line& line, float thickness, Color color)
+    {
+        return CreateLine(line, thickness, Assets::Create<Material>(color));
     }
 
     // helper function

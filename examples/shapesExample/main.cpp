@@ -72,6 +72,10 @@ int main()
     auto testCircle = rc::Shape2D::CreateCircle(circle, rc::Color(0, 0, 0));
     testCircle.transform.scale *= 2.f;
 
+    // And yes, you can create line also
+    // rc::Line line{.start = rc::Vec2(10.f, 10.f), .end = rc::Vec2(200.f, 100.f)};
+    // auto testLine = rc::Shape2D::CreateLine(line, 5.f, rc::Color(255, 0, 0));
+
     rc::Vec2 point = rc::Vec2(400.f, 300.f);
     float angle = 0.f;
     float angle2 = 180.f;

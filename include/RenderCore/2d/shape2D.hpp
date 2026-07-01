@@ -35,4 +35,10 @@ namespace rc::Shape2D
 
     RenderItem CreateCircle(const Vec2& pos, float radius, Color color);
     RenderItem CreateCircle(const Circle& circle, Color color);
+
+    // Line
+    RenderItem CreateLine(const Vec2& start, const Vec2& end, float thickness, Material* material);
+    RenderItem CreateLine(const Line& line, float thickness, Material* material);
+    RenderItem CreateLine(const Vec2& start, const Vec2& end, float thickness, Color color);
+    RenderItem CreateLine(const Line& line, float thickness, Color color);
 }
