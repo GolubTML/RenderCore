@@ -1,0 +1,2 @@
+add_executable(collision2dExample main.cpp)
+target_link_libraries(collision2dExample PRIVATE RenderCore)
