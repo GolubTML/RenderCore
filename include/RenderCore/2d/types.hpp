@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../math/vector2D.hpp"
+#include <cstdint>
 
 // All basics geometry shapes here
 
@@ -27,6 +28,8 @@ namespace rc
     {
         Vec2 position;
         float radius;
+
+        uint16_t segments;
     };
 
     struct Line

@@ -60,7 +60,17 @@ int main()
     // and new triangle here
     rc::Triangle triangle = rc::Triangle::Equilateral(rc::Vec2(0, 0), 50.f);
 
-    auto trian = rc::Shape2D::CreateTriangle(triangle, triangleMaterial);
+    auto trian = rc::Shape2D::CreateTriangle(triangle, rc::Color{180, 50, 80});
+
+    rc::Circle circle 
+    {
+        .position = {400.f, 300.f},
+        .radius = 23,
+        .segments = 32
+    };
+
+    auto testCircle = rc::Shape2D::CreateCircle(circle, rc::Color(0, 0, 0));
+    testCircle.transform.scale *= 2.f;
 
     rc::Vec2 point = rc::Vec2(400.f, 300.f);
     float angle = 0.f;
@@ -97,12 +107,14 @@ int main()
             rc::DrawObject(quad);
             rc::DrawObject(trian);
             rc::DrawObject(heart);
+            rc::DrawObject(testCircle);
         rc::EndFrame();
     }
 
     rc::DestroyObject(quad);
     rc::DestroyObject(trian);
     rc::DestroyObject(heart);
+    rc::DestroyObject(testCircle);
 
     window.Terminate();
 
